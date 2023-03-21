@@ -1,5 +1,6 @@
 import express, { Response, Request } from "express";
 import connection from "../Config/db";
+import fs from "fs";
 interface uploadRequest extends Request {
   userId?: any;
   files: Array<any>;
@@ -49,6 +50,27 @@ export const deleteImage = (req: Request, res: Response) => {
       }
 
       return res.send("file delete");
+    });
+  } catch {
+    res.status(500).send("file not present");
+  }
+};
+export const replaceImage = (req: Request, res: Response) => {
+  let uploadReq = req as uploadRequest;
+
+  try {
+    let sql = `UPDATE  uploadinfo SET uploadfile="${uploadReq.files[0]["filename"]}"  where user_id=${uploadReq.userId} and uploadfile="${req.params.id}"`;
+
+    connection.query(sql, async (err: Error, result: any) => {
+      if (err) {
+        console.log(err);
+      }
+      console.log(result, "t");
+      if (result) {
+        var t = await fs.unlinkSync(`./uploads/${req.params.id}`);
+      }
+
+      return res.send("file update");
     });
   } catch {
     res.status(500).send("file not present");

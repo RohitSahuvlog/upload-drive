@@ -3,6 +3,7 @@ import {
   postImage,
   getImage,
   deleteImage,
+  replaceImage,
 } from "../Controller/ImageController";
 import multer from "multer";
 
@@ -26,4 +27,10 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 router.post("/post", upload.array("file", 5), postImage);
 router.get("/get", getImage);
 router.delete("/delete/:id", uploadauthentication, deleteImage);
+router.patch(
+  "/update/:id",
+  uploadauthentication,
+  upload.array("file", 5),
+  replaceImage
+);
 export default router;
