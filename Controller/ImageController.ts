@@ -36,3 +36,21 @@ export const getImage = (req: Request, res: Response) => {
     res.status(500).send("file not present");
   }
 };
+
+export const deleteImage = (req: Request, res: Response) => {
+  let uploadReq = req as uploadRequest;
+
+  try {
+    let sql = `DELETE from uploadinfo where user_id=${uploadReq.userId} and uploadfile="${req.params.id}"`;
+
+    connection.query(sql, (err: Error, result: any) => {
+      if (err) {
+        console.log(err);
+      }
+
+      return res.send("file delete");
+    });
+  } catch {
+    res.status(500).send("file not present");
+  }
+};
