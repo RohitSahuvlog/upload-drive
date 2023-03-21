@@ -5,7 +5,7 @@ import router from "./Router/imageRouter";
 import path from "path";
 import userRoutes from "./Router/userRoutes";
 import authentication from "./Middleware/authentication";
-import uploadauth2 from "./Middleware/uploadmiddle2";
+import {checkupload} from "./Middleware/uploadmiddle2";
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -15,8 +15,8 @@ app.use(methodOverride("X-HTTP-Method-Override"));
 // Public
 app.use("/api/user", userRoutes);
 app.use(authentication);
-app.use("/uploadimage", router);
-app.use("/uploads", uploadauth2, express.static(path.resolve("uploads")));
+app.use("/uploadfile", router);
+app.use("/uploads", checkupload, express.static(path.resolve("uploads")));
 const port = 3000;
 console.log("check");
 app.listen(port, function () {

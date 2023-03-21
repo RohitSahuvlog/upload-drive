@@ -5,11 +5,7 @@ interface MyUserRequest extends Request {
   userId?: string;
 }
 
-export const uploadauth2 = (
-  req: MyUserRequest,
-  res: Response,
-  next: NextFunction
-) => {
+export const checkupload = (req: MyUserRequest, res: Response, next: NextFunction) => {
   var imagepath = req.path;
   var t = imagepath.split("/")[1];
 
@@ -32,4 +28,4 @@ export const uploadauth2 = (
   }
 };
 
-export default uploadauth2;
+
