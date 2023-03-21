@@ -19,3 +19,20 @@ console.log(uploadReq.files[0]);
     }
   );
 };
+export const getImage = (req: Request, res: Response) => {
+  let uploadReq = req as uploadRequest;
+
+  try {
+    let sql = `SELECT * from uploadinfo where user_id=${uploadReq.userId}`;
+
+    connection.query(sql, (err: Error, result: any) => {
+      if (err) {
+        console.log(err);
+      }
+
+      return res.send(result);
+    });
+  } catch {
+    res.status(500).send("file not present");
+  }
+};

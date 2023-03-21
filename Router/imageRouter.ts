@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { postImage } from "../Controller/ImageController";
+import { postImage, getImage } from "../Controller/ImageController";
 import multer from "multer";
 
 import storage from "../Middleware/Imageconfig";
@@ -19,4 +19,5 @@ const fileFilter = (req: any, file: any, cb: any) => {
 };
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 router.post("/post", upload.array("file", 5), postImage);
+router.get("/get", getImage);
 export default router;
