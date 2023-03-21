@@ -1,13 +1,12 @@
 import express, { Response, Request } from "express";
 import connection from "../Config/db";
-import fs from "fs";
 interface uploadRequest extends Request {
   userId?: any;
   files: Array<any>;
 }
 export const postImage = (req: Request, res: Response) => {
   let uploadReq = req as uploadRequest;
-console.log(uploadReq.files[0]);
+  console.log(uploadReq.files[0]);
   let sql = "INSERT INTO uploadinfo SET  ?";
   connection.query(
     sql,
@@ -24,7 +23,7 @@ export const getImage = (req: Request, res: Response) => {
   let uploadReq = req as uploadRequest;
 
   try {
-    let sql = `SELECT * from uploadinfo where user_id=${uploadReq.userId}`;
+    let sql = `SELECT * from uploadinfo where user_id=${uploadReq.userId} `;
 
     connection.query(sql, (err: Error, result: any) => {
       if (err) {
@@ -55,23 +54,23 @@ export const deleteImage = (req: Request, res: Response) => {
     res.status(500).send("file not present");
   }
 };
-export const replaceImage = (req: Request, res: Response) => {
+export const replaceImage = async (req: Request, res: Response) => {
   let uploadReq = req as uploadRequest;
 
   try {
-    let sql = `UPDATE  uploadinfo SET uploadfile="${uploadReq.files[0]["filename"]}"  where user_id=${uploadReq.userId} and uploadfile="${req.params.id}"`;
-
-    connection.query(sql, async (err: Error, result: any) => {
-      if (err) {
-        console.log(err);
+    fs.rename(
+      "./uploads/" + uploadReq.files[0]["filename"],
+      "./uploads/" + req.params.id,
+      (err) => {
+        if (err) throw err;
+        console.log(
+          "New image for user with id " + uploadReq.files[0]["filename"],
+          req.params.id
+        );
       }
-      console.log(result, "t");
-      if (result) {
-        var t = await fs.unlinkSync(`./uploads/${req.params.id}`);
-      }
+    );
 
-      return res.send("file update");
-    });
+    return res.send("file update");
   } catch {
     res.status(500).send("file not present");
   }
