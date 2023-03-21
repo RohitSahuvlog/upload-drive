@@ -10,10 +10,8 @@ const uploadauthentication = (
   res: Response,
   next: NextFunction
 ) => {
-  var imagepath = req.path;
-  var t = imagepath.split("/")[1];
   try {
-    let sql = `SELECT * from uploadinfo where user_id=${req.userId} AND uploadfile="${t}"`;
+    let sql = `SELECT * from uploadinfo where user_id=${req.userId} AND uploadfile="${req.params.id}"`;
 
     connection.query(sql, (err: Error, result: any) => {
       if (err) {
