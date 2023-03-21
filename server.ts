@@ -5,6 +5,7 @@ import router from "./Router/imageRouter";
 import path from "path";
 import userRoutes from  "./Router/userRoutes"
 import authentication from "./Middleware/authentication";
+import uploadauthentication from "./Middleware/uploadmiddlewere";
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -17,6 +18,11 @@ app.use("/uploads", express.static(path.resolve("uploads")));
 app.use("/api/user", userRoutes);
 app.use(authentication);
 app.use("/uploadimage", router);
+app.use(
+  "/uploads",
+  uploadauthentication,
+  express.static(path.resolve("uploads"))
+);
 const port = 3000;
 console.log("check");
 app.listen(port, function () {
