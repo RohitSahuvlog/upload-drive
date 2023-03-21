@@ -6,6 +6,7 @@ import path from "path";
 import userRoutes from  "./Router/userRoutes"
 import authentication from "./Middleware/authentication";
 import uploadauthentication from "./Middleware/uploadmiddlewere";
+import uploadauth2 from "./Middleware/uploadmiddle2";
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -23,6 +24,7 @@ app.use(
   uploadauthentication,
   express.static(path.resolve("uploads"))
 );
+app.use("/uploads", uploadauth2, express.static(path.resolve("uploads")));
 const port = 3000;
 console.log("check");
 app.listen(port, function () {

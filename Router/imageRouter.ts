@@ -1,8 +1,13 @@
 import { Router } from "express";
-import { postImage, getImage } from "../Controller/ImageController";
+import {
+  postImage,
+  getImage,
+  deleteImage,
+} from "../Controller/ImageController";
 import multer from "multer";
 
 import storage from "../Middleware/Imageconfig";
+import uploadauthentication from "../Middleware/uploadmiddlewere";
 
 const router = Router();
 const fileFilter = (req: any, file: any, cb: any) => {
@@ -20,4 +25,5 @@ const fileFilter = (req: any, file: any, cb: any) => {
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 router.post("/post", upload.array("file", 5), postImage);
 router.get("/get", getImage);
+router.delete("/delete/:id", uploadauthentication, deleteImage);
 export default router;
