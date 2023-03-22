@@ -11,13 +11,13 @@ const uploadauthentication = (
   next: NextFunction
 ) => {
   try {
-    let sql = `SELECT * from uploadinfo where user_id=${req.userId} AND uploadfile="${req.params.id}"`;
+    let sql = `SELECT * from uploadinfo where owner_id=${req.userId} AND uploadfile="${req.params.id}"`;
 
     connection.query(sql, (err: Error, result: any) => {
       if (err) {
         console.log(err);
       }
-      console.log(result);
+
       if (result.length > 0) {
         next();
       } else {

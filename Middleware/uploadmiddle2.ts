@@ -10,13 +10,12 @@ export const checkupload = (req: MyUserRequest, res: Response, next: NextFunctio
   var t = imagepath.split("/")[1];
 
   try {
-    let sql = `SELECT * from uploadinfo where user_id=${req.userId} AND uploadfile="${t}"`;
+    let sql = `SELECT * from uploadinfo where owner_id=${req.userId} AND uploadfile="${t}"`;
 
     connection.query(sql, (err: Error, result: any) => {
       if (err) {
         console.log(err);
       }
-      console.log(result);
       if (result.length > 0) {
         next();
       } else {
