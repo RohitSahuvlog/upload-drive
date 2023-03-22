@@ -76,3 +76,44 @@ export const replaceImage = async (req: Request, res: Response) => {
     res.status(500).send("file not present");
   }
 };
+
+interface uploadRequest1 extends Request {
+  userId?: any;
+  files: Array<any>;
+}
+
+export const permissionsfunc = (req: Request, res: Response) => {
+  let uploadReq = req as uploadRequest1;
+  const { permissiontype, accessemail, uploadid } = req.body;
+
+  // fetch the accessuserid base on email
+
+  connection.query(
+    "SELECT * FROM user WHERE email =?",
+    [accessemail],
+    async (err: Error, result: any) => {
+      if (err) throw err;
+      console.log(result);
+      let accessuserid;
+      if (result) {
+        accessuserid = result[0].id;
+      }
+      let sql2 = "INSERT INTO permissions SET  ?";
+      connection.query(
+        sql2,
+        {
+          acessuser_id: accessuserid,
+          uploadinfo_id: uploadid,
+          permission_type: permissiontype,
+        },
+        (err: Error, result: any) => {
+          if (err) {
+            console.log(err);
+          }
+          return res.status(201).send({ message: " you are access this file" });
+        }
+      );
+    }
+  );
+};
+

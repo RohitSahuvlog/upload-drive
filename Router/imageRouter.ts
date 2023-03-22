@@ -4,11 +4,14 @@ import {
   getImage,
   deleteImage,
   replaceImage,
+  permissionsfunc,
+  updateaccessfunc,
 } from "../Controller/ImageController";
 import multer from "multer";
 
 import storage from "../Middleware/Imageconfig";
 import uploadauthentication from "../Middleware/uploadmiddlewere";
+import { acessupload } from "../Middleware/permissionmiddle";
 
 const router = Router();
 const fileFilter = (req: any, file: any, cb: any) => {
@@ -25,6 +28,7 @@ const fileFilter = (req: any, file: any, cb: any) => {
 };
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 router.post("/post", upload.array("file", 5), postImage);
+router.post("/permission", acessupload, permissionsfunc);
 router.get("/get", getImage);
 router.delete("/delete/:id", uploadauthentication, deleteImage);
 router.patch(
