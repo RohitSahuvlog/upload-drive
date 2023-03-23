@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import dotenv from "dotenv"; 
+import dotenv from "dotenv";
 import connection from "../Config/db";
 dotenv.config();
 import bcrypt from "bcryptjs";
@@ -18,7 +18,7 @@ const registerUser = async (req: Request, res: Response) => {
     async (err: Error, result: any) => {
       if (err) throw err;
       if (result.length > 0) {
-        return res.send({ message: "this email already used" });
+        return res.send({ message: "this email  used already" });
       }
 
       var t = await bcrypt.hash(password, 8);
@@ -30,7 +30,9 @@ const registerUser = async (req: Request, res: Response) => {
           if (err) {
             res.status(400);
           } else if (user) {
-            return res.status(201).send("user Register successfull");
+            return res
+              .status(201)
+              .send({ message: " this user have  Registered successfully" });
           }
         }
       );
@@ -67,15 +69,19 @@ const authUser = (req: Request, res: Response) => {
               token,
             });
           } else {
-            return res.status(500).send(" incorrect password");
+            return res
+              .status(500)
+              .send({ error: "You are writing incorrect password" });
           }
         });
       } else {
-        return res.status(500).send("incorrect email");
+        return res.status(500).send({ error: "Your email is incorrect" });
       }
     });
   } else {
-    res.status(500).send("Please Enter Email Address and Password Details");
+    res
+      .status(500)
+      .send({ error: "Please Enter Email Address and Password Details" });
   }
 };
 

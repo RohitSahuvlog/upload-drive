@@ -1,17 +1,15 @@
 import { Router } from "express";
 import {
-  postImage,
-  getImage,
-  deleteImage,
-  replaceImage,
-  permissionsfunc,
-  updateaccessfunc,
-} from "../Controller/ImageController";
+  postFile,
+  getFile,
+  deleteFile,
+  replaceFile,
+  permissionsFunc,
+} from "../Controller/fileController";
 import multer from "multer";
 
-import storage from "../Middleware/Imageconfig";
+import storage from "../Middleware/fileconfig";
 import uploadauthentication from "../Middleware/uploadmiddlewere";
-import { acessupload } from "../Middleware/permissionmiddle";
 
 const router = Router();
 const fileFilter = (req: any, file: any, cb: any) => {
@@ -27,14 +25,16 @@ const fileFilter = (req: any, file: any, cb: any) => {
   }
 };
 const upload = multer({ storage: storage, fileFilter: fileFilter });
-router.post("/post", upload.array("file", 5), postImage);
-router.post("/permission", acessupload, permissionsfunc);
-router.get("/get", getImage);
-router.delete("/delete/:id", uploadauthentication, deleteImage);
+router.get("/get", getFile);
+router.post("/post", upload.array("file", 5), postFile);
+router.post("/permission/:id", uploadauthentication, permissionsFunc);
+
+router.delete("/delete/:id", uploadauthentication, deleteFile);
 router.patch(
   "/update/:id",
   uploadauthentication,
   upload.array("file", 5),
-  replaceImage
+  replaceFile
 );
+
 export default router;

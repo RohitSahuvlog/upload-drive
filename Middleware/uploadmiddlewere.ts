@@ -5,7 +5,7 @@ interface MyUserRequest extends Request {
   userId?: string;
 }
 
-const uploadauthentication = (
+const uploadauthentication = async (
   req: MyUserRequest,
   res: Response,
   next: NextFunction
@@ -25,7 +25,7 @@ const uploadauthentication = (
       }
     });
   } catch {
-    res.status(500).send("err in uploadauthentication");
+    res.status(500).send({ error: "err in uploadauthentication" });
   }
 };
 
