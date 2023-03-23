@@ -11,19 +11,35 @@ const uploadauthentication = async (
   next: NextFunction
 ) => {
   try {
-    let sql = `SELECT * from uploadinfo where owner_id=${req.userId} AND uploadfile="${req.params.id}"`;
-
-    connection.query(sql, (err: Error, result: any) => {
+    console.log(req.userId, req.params.id);
+    let sql1 = `SELECT permissions.permission_id,uploadinfo.id,uploadinfo_id,acessuser_id,uploadfile from permissions join uploadinfo  on permissions.uploadinfo_id=uploadinfo.id where acessuser_id=${req.userId}  AND uploadfile="${req.params.id}"`;
+    let sql2 = `SELECT * from uploadinfo where owner_id=${req.userId} AND uploadfile='${req.params.id}'`;
+    let t1 = false;
+    let t2 = false;
+    await connection.query(sql1, (err: Error, result: any) => {
       if (err) {
         console.log(err);
       }
-
       if (result.length > 0) {
+        t1 = true;
+      }
+    });
+    await connection.query(sql2, (err: Error, result: any) => {
+      if (err) {
+        console.log(err);
+      }
+      if (result.length > 0) {
+        t2 = true;
+      }
+    });
+    setTimeout(() => {
+      console.log("t1:", t1, "t2:", t2);
+      if (t1 || t2) {
         next();
       } else {
         return res.send({ message: "you are not authorize to acess data" });
       }
-    });
+    }, 1000);
   } catch {
     res.status(500).send({ error: "err in uploadauthentication" });
   }
