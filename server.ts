@@ -5,7 +5,7 @@ import router from "./Router/imageRouter";
 import path from "path";
 import userRoutes from "./Router/userRoutes";
 import authentication from "./Middleware/authentication";
-import {checkupload} from "./Middleware/uploadmiddle2";
+import { checkupload } from "./Middleware/checkuploadmiddlewere";
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
