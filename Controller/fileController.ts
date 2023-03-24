@@ -29,7 +29,7 @@ export const getFile = async (req: Request, res: Response) => {
         console.log(err);
       }
       if (result.length == 0) {
-        let sql1 = `SELECT permissions.permission_id,uploadinfo.id,uploadinfo_id,acessuser_id,uploadfile from permissions join uploadinfo  on permissions.uploadinfo_id=uploadinfo.id where acessuser_id=${uploadReq.userId}`;
+        let sql1 = `SELECT permissions.permission_id,uploadinfo.id,uploadinfo_path,acessuser_id,uploadfile from permissions join uploadinfo  on permissions.uploadinfo_path=uploadinfo.uploadfile where acessuser_id=${uploadReq.userId}`;
         connection.query(sql1, (err: Error, result: any) => {
           if (err) {
             console.log(err);
@@ -50,7 +50,7 @@ export const deleteFile = async (req: Request, res: Response) => {
   console.log(req.params.id);
 
   try {
-    let sql1 = `SELECT permissions.permission_id,uploadinfo.id,uploadinfo_id,acessuser_id,uploadfile from permissions join uploadinfo  on permissions.uploadinfo_id=uploadinfo.id where  uploadfile="${req.params.id}"`;
+    let sql1 = `SELECT permissions.permission_id,uploadinfo.id,uploadinfo_path,acessuser_id,uploadfile from permissions join uploadinfo  on permissions.uploadinfo_path=uploadinfo.uploadfile where  uploadfile="${req.params.id}"`;
 
     connection.query(sql1, async (err: Error, result: any) => {
       if (err) {
@@ -111,10 +111,10 @@ interface uploadRequest1 extends Request {
 
 export const permissionsFunc = (req: Request, res: Response) => {
   let uploadReq = req as uploadRequest1;
-  const { permissiontype, accessemail, uploadid } = req.body;
+  const { permissiontype, accessemail } = req.body;
 
   // fetch the accessuserid base on email
-
+console.log(uploadReq.params.id);
   connection.query(
     "SELECT * FROM user WHERE email =?",
     [accessemail],
@@ -130,7 +130,7 @@ export const permissionsFunc = (req: Request, res: Response) => {
         sql2,
         {
           acessuser_id: accessuserid,
-          uploadinfo_id: uploadid,
+          uploadinfo_path: uploadReq.params.id,
           permission_type: permissiontype,
         },
         (err: Error, result: any) => {

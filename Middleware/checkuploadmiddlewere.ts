@@ -24,7 +24,7 @@ export const checkupload = (
       if (result.length > 0) {
         next();
       } else {
-        let sql1 = `SELECT permissions.permission_id,uploadinfo.id,uploadinfo_id,acessuser_id,uploadfile from permissions join uploadinfo  on permissions.uploadinfo_id=uploadinfo.id where acessuser_id=${req.userId} AND uploadfile="${t}" `;
+        let sql1 = `SELECT permissions.permission_id,uploadinfo.id,uploadinfo_path,acessuser_id,uploadfile from permissions join uploadinfo  on permissions.uploadinfo_path=uploadinfo.uploadfile where acessuser_id=${req.userId} AND uploadfile="${t}" `;
         connection.query(sql1, (err: Error, result: any) => {
           if (err) {
             console.log(err);
