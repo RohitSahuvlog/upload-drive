@@ -36,5 +36,6 @@ router.patch(
   upload.array("file", 5),
   replaceFile
 );
+router.get("/getdetails", getDetails);
 
 export default router;
