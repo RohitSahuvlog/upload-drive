@@ -5,6 +5,8 @@ import {
   deleteFile,
   replaceFile,
   permissionsFunc,
+  getDetails,
+  deletePermissions,
 } from "../Controller/fileController";
 import multer from "multer";
 
@@ -19,9 +21,10 @@ const fileFilter = (req: any, file: any, cb: any) => {
 };
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 router.get("/get", getFile);
+router.get("/getdetails", getDetails);
 router.post("/post", upload.array("file", 5), postFile);
 router.post("/permission/:id", uploadauthentication, permissionsFunc);
-
+router.delete("/permissiondelete/:id", uploadauthentication, deletePermissions);
 router.delete("/delete/:id", uploadauthentication, deleteFile);
 router.patch(
   "/update/:id",

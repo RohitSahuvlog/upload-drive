@@ -52,7 +52,7 @@ export const getFile = async (req: Request, res: Response) => {
         console.log(err);
       }
 
-      let sql1 = `SELECT permissions.permission_id,uploadinfo.id,uploadinfo_path,acessuser_id from permissions join uploadinfo  on permissions.uploadinfo_path=uploadinfo.uploadfile where acessuser_id=${uploadReq.userId}`;
+      let sql1 = `SELECT permissions.permission_id,uploadinfo.id,uploadinfo_path,acessuser_id,filename from permissions join uploadinfo  on permissions.uploadinfo_path=uploadinfo.uploadfile where acessuser_id=${uploadReq.userId}`;
       connection.query(sql1, (err: Error, result2: any) => {
         if (err) {
           console.log(err);
@@ -185,25 +185,43 @@ export const getDetails = async (req: Request, res: Response) => {
   let uploadReq = req as uploadRequest;
 
   try {
-    let sql1 = `SELECT user.id,uploadinfo.id,uploadfile,create_at,update_at,size,
+    let sql1 = `SELECT user.id,uploadinfo.id,uploadfile,create_at,update_at,size,owner_id,
   acessuser_id,filename,name,email from user join uploadinfo  on uploadinfo.owner_id=user.id 
    join permissions
-  ON  permissions.uploadinfo_path =uploadinfo.uploadfile   ;`;
+  ON  permissions.uploadinfo_path =uploadinfo.uploadfile ;`;
 
     await connection.query(sql1, async (err: Error, result: any) => {
       if (err) {
         console.log(err);
       }
-       let sql = `SELECT user.id,uploadinfo.id,uploadfile,create_at,update_at,size,
-  filename,name,email from user join uploadinfo  on uploadinfo.owner_id=user.id;`;
-    await  connection.query(sql, async (err: Error, result1: any) => {
+      let sql = `SELECT user.id,uploadinfo.id,uploadfile,create_at,update_at,size,owner_id,
+  filename,name,email from user join uploadinfo  on uploadinfo.owner_id=user.id`;
+      await connection.query(sql, async (err: Error, result1: any) => {
         if (err) {
           console.log(err);
         }
+        return res.status(200).send([...result1, ...result]);
+      });
+    });
+  } catch {
+    res.status(500).send({ error: "file donot present in database" });
+  }
+};
 
-        return res.status(200).send({result1,accessuser:result});
-      })
-   
+export const deletePermissions = async (req: Request, res: Response) => {
+  try {
+    let sql1 = `DELETE from permissions where  uploadinfo_path="${req.params.id}"`;
+
+    connection.query(sql1, async (err: Error, result: any) => {
+      if (err) {
+        console.log(err);
+      }
+
+      if (result.length > 0) {
+        return res.send({ message: "Permisssion  have deleted from database" });
+      } else {
+        return res.send({ message: "Owner donot give to access this file" });
+      }
     });
   } catch {
     res.status(500).send({ error: "file donot present in database" });
