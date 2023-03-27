@@ -14,32 +14,26 @@ const uploadauthentication = async (
     console.log(req.userId, req.params.id);
     let sql1 = `SELECT permissions.permission_id,uploadinfo.id,uploadinfo_path,acessuser_id,uploadfile from permissions join uploadinfo  on permissions.uploadinfo_path=uploadinfo.uploadfile where acessuser_id=${req.userId}  AND uploadfile="${req.params.id}"`;
     let sql2 = `SELECT * from uploadinfo where owner_id=${req.userId} AND uploadfile='${req.params.id}'`;
-    let t1 = false;
-    let t2 = false;
+
     await connection.query(sql1, (err: Error, result: any) => {
+      
       if (err) {
         console.log(err);
       }
-      if (result.length > 0) {
-        t1 = true;
+      if (!err && result.length > 0) {
+       return next()
       }
+     
     });
     await connection.query(sql2, (err: Error, result: any) => {
       if (err) {
         console.log(err);
       }
-      if (result.length > 0) {
-        t2 = true;
-      }
+       if (!err && result.length > 0) {
+         return next();
+       }
     });
-    setTimeout(() => {
-      console.log("t1:", t1, "t2:", t2);
-      if (t1 || t2) {
-        next();
-      } else {
-        return res.send({ message: "you are not authorize to acess data" });
-      }
-    }, 1000);
+    
   } catch {
     res.status(500).send({ error: "err in uploadauthentication" });
   }
