@@ -227,3 +227,27 @@ export const deletePermissions = async (req: Request, res: Response) => {
     res.status(500).send({ error: "file donot present in database" });
   }
 };
+interface upload extends Request {
+  userId?: any;
+specificuserId:Number
+}
+export const specificPermissions = async (req: Request, res: Response) => {
+let uploadReq = req as upload;
+  try {
+    let sql1 = `DELETE from permissions where  acessuser_id=${uploadReq.body.specificuserId}  AND uploadinfo_path="${uploadReq.params.id}"`;
+
+    connection.query(sql1, async (err: Error, result: any) => {
+      if (err) {
+        console.log(err);
+      }
+console.log(result)
+      if (result.affectedRows > 0) {
+        return res.send({ message: "this user remove from premission" });
+      } else {
+        return res.send({ message: "Owner donot give to access this file" });
+      }
+    });
+  } catch {
+    res.status(500).send({ error: "file donot present in database" });
+  }
+};
