@@ -52,7 +52,6 @@ export const getFile = async (req: Request, res: Response) => {
         console.log(err);
       }
 
-      
       let sql1 = `SELECT permissions.permission_id,uploadinfo.id,uploadinfo_path,user_id,filename from permissions join uploadinfo  on permissions.uploadinfo_path=uploadinfo.filepath where user_id=${uploadReq.userId}`;
       connection.query(sql1, (err: Error, result2: any) => {
         if (err) {
@@ -131,7 +130,7 @@ export const replaceFile = async (req: Request, res: Response) => {
           .status(500)
           .send({ error: "file donot present in database" });
       }
-      return res.status(201).send({ message: "file uploads by owner" });
+      return res.status(201).send({ message: "file uploaded successfully" });
     });
 
     // return res.send({ message: "file  have updated by awner or accessuser" });
