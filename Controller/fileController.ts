@@ -42,6 +42,8 @@ export const postFile = async (req: Request, res: Response) => {
     res.status(500).send({ error: "file dont post" });
   }
 };
+
+// it give list of upload file by user
 export const getFile = async (req: Request, res: Response) => {
   let uploadReq = req as uploadRequest;
 
