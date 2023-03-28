@@ -12,8 +12,8 @@ const uploadauthentication = async (
 ) => {
   try {
     console.log(req.userId, req.params.id);
-    let sql1 = `SELECT permissions.permission_id,uploadinfo.id,uploadinfo_path,acessuser_id,uploadfile from permissions join uploadinfo  on permissions.uploadinfo_path=uploadinfo.uploadfile where acessuser_id=${req.userId}  AND uploadfile="${req.params.id}"`;
-    let sql2 = `SELECT * from uploadinfo where owner_id=${req.userId} AND uploadfile='${req.params.id}'`;
+    let sql1 = `SELECT permissions.permission_id,uploadinfo.id,uploadinfo_path,user_id,filepath from permissions join uploadinfo  on permissions.uploadinfo_path=uploadinfo.filepath where user_id=${req.userId}  AND filepath="${req.params.id}"`;
+    let sql2 = `SELECT * from uploadinfo where owner_id=${req.userId} AND filepath='${req.params.id}'`;
 
     await connection.query(sql1, (err: Error, result: any) => {
       

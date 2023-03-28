@@ -23,7 +23,7 @@ export const postFile = async (req: Request, res: Response) => {
             sql,
             {
               owner_id: uploadReq.userId,
-              uploadfile: uploadReq.files[0]["filename"],
+              filepath: uploadReq.files[0]["filename"],
               filename: uploadReq.files[0]["originalname"],
               size,
             },
@@ -52,7 +52,8 @@ export const getFile = async (req: Request, res: Response) => {
         console.log(err);
       }
 
-      let sql1 = `SELECT permissions.permission_id,uploadinfo.id,uploadinfo_path,acessuser_id,filename from permissions join uploadinfo  on permissions.uploadinfo_path=uploadinfo.uploadfile where acessuser_id=${uploadReq.userId}`;
+      
+      let sql1 = `SELECT permissions.permission_id,uploadinfo.id,uploadinfo_path,user_id,filename from permissions join uploadinfo  on permissions.uploadinfo_path=uploadinfo.filepath where user_id=${uploadReq.userId}`;
       connection.query(sql1, (err: Error, result2: any) => {
         if (err) {
           console.log(err);
@@ -68,7 +69,7 @@ export const getFile = async (req: Request, res: Response) => {
 
 export const deleteFile = async (req: Request, res: Response) => {
   try {
-    let sql1 = `SELECT permissions.permission_id,uploadinfo.id,uploadinfo_path,acessuser_id,uploadfile from permissions join uploadinfo  on permissions.uploadinfo_path=uploadinfo.uploadfile where  uploadfile="${req.params.id}"`;
+    let sql1 = `SELECT permissions.permission_id,uploadinfo.id,uploadinfo_path,user_id,filepath from permissions join uploadinfo  on permissions.uploadinfo_path=uploadinfo.filepath where  filepath="${req.params.id}"`;
 
     connection.query(sql1, async (err: Error, result: any) => {
       if (err) {
@@ -87,7 +88,7 @@ export const deleteFile = async (req: Request, res: Response) => {
       }
       await fs.unlinkSync(`./uploads/${req.params.id}`);
 
-      let sql = `DELETE from uploadinfo where  uploadfile="${req.params.id}"`;
+      let sql = `DELETE from uploadinfo where  filepath="${req.params.id}"`;
 
       connection.query(sql, async (err: Error, result: any) => {
         if (err) {
@@ -122,7 +123,7 @@ export const replaceFile = async (req: Request, res: Response) => {
       return `${date} ${time}`;
     };
     var date = await formatedTimestamp();
-    let sql = `UPDATE uploadinfo SET update_at="${date}" WHERE uploadfile="${uploadReq.params.id}"`;
+    let sql = `UPDATE uploadinfo SET update_at="${date}" WHERE filepath="${uploadReq.params.id}"`;
     await connection.query(sql, (err: Error, result: any) => {
       if (err) {
         console.log(err);
@@ -142,6 +143,7 @@ export const replaceFile = async (req: Request, res: Response) => {
 interface uploadRequest1 extends Request {
   userId?: any;
   files: Array<any>;
+  
 }
 
 export const permissionsFunc = (req: Request, res: Response) => {
@@ -164,7 +166,7 @@ export const permissionsFunc = (req: Request, res: Response) => {
       connection.query(
         sql2,
         {
-          acessuser_id: accessuserid,
+          user_id: accessuserid,
           uploadinfo_path: uploadReq.params.id,
           permission_type: permissiontype,
         },
@@ -234,7 +236,7 @@ specificuserId:Number
 export const specificPermissions = async (req: Request, res: Response) => {
 let uploadReq = req as upload;
   try {
-    let sql1 = `DELETE from permissions where  acessuser_id=${uploadReq.body.specificuserId}  AND uploadinfo_path="${uploadReq.params.id}"`;
+    let sql1 = `DELETE from permissions where  user_id=${uploadReq.body.specificuserId}  AND uploadinfo_path="${uploadReq.params.id}"`;
 
     connection.query(sql1, async (err: Error, result: any) => {
       if (err) {
@@ -242,7 +244,7 @@ let uploadReq = req as upload;
       }
 console.log(result)
       if (result.affectedRows > 0) {
-        return res.send({ message: "this user remove from premission" });
+        return res.send({ message: "this user remove from permission" });
       } else {
         return res.send({ message: "Owner donot give to access this file" });
       }

@@ -14,7 +14,7 @@ export const checkupload = (
   var t = imagepath.split("/")[1];
   console.log(t)
   try {
-    let sql = `SELECT * from uploadinfo where owner_id=${req.userId} AND uploadfile="${t}"`;
+    let sql = `SELECT * from uploadinfo where owner_id=${req.userId} AND filepath="${t}"`;
 
     connection.query(sql, (err: Error, result: any) => {
       if (err) {
@@ -24,7 +24,7 @@ export const checkupload = (
       if (result.length > 0) {
         next();
       } else {
-        let sql1 = `SELECT permissions.permission_id,uploadinfo.id,uploadinfo_path,acessuser_id,uploadfile from permissions join uploadinfo  on permissions.uploadinfo_path=uploadinfo.uploadfile where acessuser_id=${req.userId} AND uploadfile="${t}" `;
+        let sql1 = `SELECT permissions.permission_id,uploadinfo.id,uploadinfo_path,user_id,filepath from permissions join uploadinfo  on permissions.uploadinfo_path=uploadinfo.filepath where user_id=${req.userId} AND filepath="${t}" `;
         connection.query(sql1, (err: Error, result: any) => {
           if (err) {
             console.log(err);
