@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.raw({ type: "application/vnd.custom-type" }));
 
-app.use("/api/user", userRoutes);
+app.use("/user", userRoutes);
 app.use(authentication);
 app.use("/uploadfile", router);
 app.use("/uploads", checkupload, express.static(path.resolve("uploads")));
