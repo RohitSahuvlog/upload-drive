@@ -8,7 +8,7 @@ var connection = mysql.createConnection({
   insecureAuth: true,
 });
 
-connection.connect(function (err:Error) {
+connection.connect(function (err: Error) {
   if (err) throw err;
   console.log("Connected!");
 });

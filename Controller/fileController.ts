@@ -5,21 +5,24 @@ interface uploadRequest extends Request {
   userId?: any;
   files: Array<any>;
 }
+ 
 
+//post file function  
 export const postFile = async (req: Request, res: Response) => {
+
   let uploadReq = req as uploadRequest;
   console.log(uploadReq.files[0]);
   try {
     await fs.stat(
       `./uploads/${uploadReq.files[0]["filename"]}`,
-      (err, fileStats) => {
+      async (err, fileStats) => {
         if (err) {
           console.log(err);
         } else {
           let size = fileStats.size;
           console.log(size);
           let sql = "INSERT INTO uploadinfo SET  ?";
-          connection.query(
+          await connection.query(
             sql,
             {
               owner_id: uploadReq.userId,
@@ -31,7 +34,20 @@ export const postFile = async (req: Request, res: Response) => {
               if (err) {
                 console.log(err);
               }
-              console.log(result);
+            }
+          );
+          let sql1 = "INSERT INTO permissions SET  ?";
+          await connection.query(
+            sql1,
+            {
+              uploadinfo_path: uploadReq.files[0]["filename"],
+              user_id: uploadReq.userId,
+              permission_type: 2,
+            },
+            (err: Error, result: any) => {
+              if (err) {
+                console.log(err);
+              }
               return res.status(201).send({ message: "file uploads by owner" });
             }
           );

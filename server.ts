@@ -13,7 +13,7 @@ app.use(bodyParser.raw({ type: "application/vnd.custom-type" }));
 
 app.use("/user", userRoutes);
 app.use(authentication);
-app.use("/uploadfile", router);
+app.use("/file", router);
 app.use("/uploads", checkupload, express.static(path.resolve("uploads")));
 
 const port = 3000;
