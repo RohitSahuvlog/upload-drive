@@ -24,7 +24,7 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 router.get("/user/myfiles", getFile);
 router.get("/details", getDetails);
 router.post("/upload", upload.array("file", 5), postFile);
-router.post("/permission/:id", uploadauthentication, permissionsFunc);
+router.post("/permission/add/:id", uploadauthentication, permissionsFunc);
 router.delete(
   "/specificPer/:id",uploadauthentication,
   specificPermissions

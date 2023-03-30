@@ -159,16 +159,16 @@ interface uploadRequest1 extends Request {
   files: Array<any>;
   
 }
-
+// fetch the accessuserid base on email
 export const permissionsFunc = (req: Request, res: Response) => {
   let uploadReq = req as uploadRequest1;
-  const { permissiontype, accessemail } = req.body;
+  const { permissiontype, email } = req.body;
 
-  // fetch the accessuserid base on email
-  console.log(uploadReq.params.id);
+  
+try{
   connection.query(
     "SELECT * FROM user WHERE email =?",
-    [accessemail],
+    [email],
     async (err: Error, result: any) => {
       if (err) throw err;
       let accessuserid;
@@ -195,6 +195,9 @@ export const permissionsFunc = (req: Request, res: Response) => {
       );
     }
   );
+   } catch(error) {
+    res.status(500).send({ error });
+  }
 };
 
 export const getDetails = async (req: Request, res: Response) => {
