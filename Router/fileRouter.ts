@@ -31,13 +31,12 @@ router.delete(
 );
 router.delete("/permissiondelete/:id", uploadauthentication, deletePermissions);
 
-router.delete("/delete/:id", uploadauthentication, deleteFile);
+router.post("/delete", uploadauthentication, deleteFile);
 router.patch(
   "/update/:id",
   uploadauthentication,
   upload.array("file", 5),
   replaceFile
 );
-router.get("/getdetails", getDetails);
 
 export default router;

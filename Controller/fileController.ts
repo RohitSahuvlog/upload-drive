@@ -82,34 +82,26 @@ export const getFile = async (req: Request, res: Response) => {
 };
 
 export const deleteFile = async (req: Request, res: Response) => {
+  let uploadReq = req as uploadRequest;
+  const { filepaths } = req.body;
   try {
-    let sql1 = `SELECT permissions.permission_id,uploadinfo.id,uploadinfo_path,user_id,filepath from permissions join uploadinfo  on permissions.uploadinfo_path=uploadinfo.filepath where  filepath="${req.params.id}"`;
+    let sql1 = `DELETE from permissions where  uploadinfo_path="${filepaths}"`;
 
     connection.query(sql1, async (err: Error, result: any) => {
       if (err) {
         console.log(err);
       }
-      if (result.length > 0) {
-        for (var i = 0; i < result.length; i++) {
-          let sql = `DELETE from permissions where  permission_id=${result[i].permission_id}`;
+    });
 
-          connection.query(sql, async (err: Error, result: any) => {
-            if (err) {
-              console.log(err);
-            }
-          });
-        }
+    await fs.unlinkSync(`./uploads/${filepaths}`);
+
+    let sql = `DELETE from uploadinfo where  filepath="${filepaths}"`;
+
+    connection.query(sql, async (err: Error, result: any) => {
+      if (err) {
+        console.log(err);
       }
-      await fs.unlinkSync(`./uploads/${req.params.id}`);
-
-      let sql = `DELETE from uploadinfo where  filepath="${req.params.id}"`;
-
-      connection.query(sql, async (err: Error, result: any) => {
-        if (err) {
-          console.log(err);
-        }
-        return res.send({ message: "file  have deleted from database" });
-      });
+      return res.send({ message: "file  have deleted from database" });
     });
   } catch {
     res.status(500).send({ error: "file donot present in database" });
