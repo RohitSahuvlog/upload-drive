@@ -64,20 +64,17 @@ export const getFile = async (req: Request, res: Response) => {
   let uploadReq = req as uploadRequest;
 
   try {
-    let sql = `SELECT * from uploadinfo where owner_id=${uploadReq.userId} `;
-    await connection.query(sql, (err: Error, result1: any) => {
-      if (err) {
-        console.log(err);
-      }
 
-      let sql1 = `SELECT permissions.permission_id,uploadinfo.id,uploadinfo_path,user_id,filename from permissions join uploadinfo  on permissions.uploadinfo_path=uploadinfo.filepath where user_id=${uploadReq.userId}`;
+      let sql1 = `SELECT DISTINCT user.id,uploadinfo.id,filepath,create_at,update_at,size,owner_id,
+  user_id,filename,name,email from user join uploadinfo  on uploadinfo.owner_id=user.id 
+   join permissions ON  permissions.uploadinfo_path =uploadinfo.filepath  where user_id=${uploadReq.userId}`;
       connection.query(sql1, (err: Error, result2: any) => {
         if (err) {
           console.log(err);
         }
 
-        return res.status(200).send({ Files: result1, IndirectFile: result2 });
-      });
+        return res.status(200).send({  result2 });
+  
     });
   } catch {
     res.status(500).send({ error: "file donot present in database" });
