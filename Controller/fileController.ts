@@ -204,24 +204,18 @@ export const getDetails = async (req: Request, res: Response) => {
   let uploadReq = req as uploadRequest;
 
   try {
-    let sql1 = `SELECT user.id,uploadinfo.id,uploadfile,create_at,update_at,size,owner_id,
-  acessuser_id,filename,name,email from user join uploadinfo  on uploadinfo.owner_id=user.id 
-   join permissions
-  ON  permissions.uploadinfo_path =uploadinfo.uploadfile ;`;
+    let sql1 = `SELECT DISTINCT user.id,uploadinfo.id,filepath,create_at,update_at,size,owner_id,
+  user_id,filename,name,email from user join uploadinfo  on uploadinfo.owner_id=user.id 
+   join permissions ON  permissions.uploadinfo_path =uploadinfo.filepath  `;
 
     await connection.query(sql1, async (err: Error, result: any) => {
       if (err) {
         console.log(err);
       }
-      let sql = `SELECT user.id,uploadinfo.id,uploadfile,create_at,update_at,size,owner_id,
-  filename,name,email from user join uploadinfo  on uploadinfo.owner_id=user.id`;
-      await connection.query(sql, async (err: Error, result1: any) => {
-        if (err) {
-          console.log(err);
-        }
-        return res.status(200).send([...result1, ...result]);
+       return res.status(200).send({ result });
+     
+      
       });
-    });
   } catch {
     res.status(500).send({ error: "file donot present in database" });
   }

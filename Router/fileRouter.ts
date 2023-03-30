@@ -21,8 +21,8 @@ const fileFilter = (req: any, file: any, cb: any) => {
  
 };
 const upload = multer({ storage: storage, fileFilter: fileFilter });
-router.get("/get", getFile);
-router.get("/getdetails", getDetails);
+router.get("/user/myfiles", getFile);
+router.get("/details", getDetails);
 router.post("/upload", upload.array("file", 5), postFile);
 router.post("/permission/:id", uploadauthentication, permissionsFunc);
 router.delete(
