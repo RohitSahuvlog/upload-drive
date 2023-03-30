@@ -233,13 +233,14 @@ export const deletePermissions = async (req: Request, res: Response) => {
   }
 };
 interface upload extends Request {
-  userId?: any;
-specificuserId:Number
+  filepaths?: any;
+  user_id: Number;
 }
 export const specificPermissions = async (req: Request, res: Response) => {
-let uploadReq = req as upload;
+  let uploadReq = req as upload;
+const { filepaths, user_id } = uploadReq.body
   try {
-    let sql1 = `DELETE from permissions where  user_id=${uploadReq.body.specificuserId}  AND uploadinfo_path="${uploadReq.params.id}"`;
+    let sql1 = `DELETE from permissions where  user_id=${user_id}  AND uploadinfo_path="${filepaths}"`;
 
     connection.query(sql1, async (err: Error, result: any) => {
       if (err) {
@@ -247,7 +248,7 @@ let uploadReq = req as upload;
       }
 console.log(result)
       if (result.affectedRows > 0) {
-        return res.send({ message: "this user remove from permission" });
+        return res.send({ message: "Permission removed to given user" });
       } else {
         return res.send({ message: "Owner donot give to access this file" });
       }
