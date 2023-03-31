@@ -5,13 +5,9 @@ interface uploadRequest extends Request {
   userId?: any;
   files: Array<any>;
 }
- 
 
-//post file function  
 export const postFile = async (req: Request, res: Response) => {
-
   let uploadReq = req as uploadRequest;
-  console.log(uploadReq.files[0]);
   try {
     await fs.stat(
       `./uploads/${uploadReq.files[0]["filename"]}`,
@@ -59,22 +55,19 @@ export const postFile = async (req: Request, res: Response) => {
   }
 };
 
-// it give list of upload file by user
 export const getFile = async (req: Request, res: Response) => {
   let uploadReq = req as uploadRequest;
 
   try {
-
-      let sql1 = `SELECT DISTINCT user.id,uploadinfo.id,filepath,create_at,update_at,size,owner_id,
+    let sql1 = `SELECT DISTINCT user.id,uploadinfo.id,filepath,create_at,update_at,size,owner_id,
   user_id,filename,name,email from user join uploadinfo  on uploadinfo.owner_id=user.id 
    join permissions ON  permissions.uploadinfo_path =uploadinfo.filepath  where user_id=${uploadReq.userId}`;
-      connection.query(sql1, (err: Error, result2: any) => {
-        if (err) {
-          console.log(err);
-        }
+    connection.query(sql1, (err: Error, result2: any) => {
+      if (err) {
+        console.log(err);
+      }
 
-        return res.status(200).send({  result2 });
-  
+      return res.status(200).send({ result2 });
     });
   } catch {
     res.status(500).send({ error: "file donot present in database" });
@@ -116,10 +109,6 @@ export const replaceFile = async (req: Request, res: Response) => {
       "./uploads/" + req.params.id,
       (err: any) => {
         if (err) throw err;
-        console.log(
-          "New image for user with id " + uploadReq.files[0]["filename"],
-          req.params.id
-        );
       }
     );
     const formatedTimestamp = () => {
@@ -139,8 +128,6 @@ export const replaceFile = async (req: Request, res: Response) => {
       }
       return res.status(201).send({ message: "file uploaded successfully" });
     });
-
-    // return res.send({ message: "file  have updated by awner or accessuser" });
   } catch {
     res.status(500).send({ error: "file donot present in database" });
   }
@@ -149,45 +136,43 @@ export const replaceFile = async (req: Request, res: Response) => {
 interface uploadRequest1 extends Request {
   userId?: any;
   files: Array<any>;
-  
 }
-// fetch the accessuserid base on email
+
 export const permissionsFunc = (req: Request, res: Response) => {
   let uploadReq = req as uploadRequest1;
   const { permissiontype, email } = req.body;
 
-  
-try{
-  connection.query(
-    "SELECT * FROM user WHERE email =?",
-    [email],
-    async (err: Error, result: any) => {
-      if (err) throw err;
-      let accessuserid;
-      if (result.length > 0) {
-        accessuserid = result[0].id;
-      }
-
-      let sql2 = "INSERT INTO permissions SET  ?";
-      connection.query(
-        sql2,
-        {
-          user_id: accessuserid,
-          uploadinfo_path: uploadReq.params.id,
-          permission_type: permissiontype,
-        },
-        (err: Error, result: any) => {
-          if (err) {
-            console.log(err);
-          }
-          return res
-            .status(201)
-            .send({ message: "you have an access of this file" });
+  try {
+    connection.query(
+      "SELECT * FROM user WHERE email =?",
+      [email],
+      async (err: Error, result: any) => {
+        if (err) throw err;
+        let accessuserid;
+        if (result.length > 0) {
+          accessuserid = result[0].id;
         }
-      );
-    }
-  );
-   } catch(error) {
+
+        let sql2 = "INSERT INTO permissions SET  ?";
+        connection.query(
+          sql2,
+          {
+            user_id: accessuserid,
+            uploadinfo_path: uploadReq.params.id,
+            permission_type: permissiontype,
+          },
+          (err: Error, result: any) => {
+            if (err) {
+              console.log(err);
+            }
+            return res
+              .status(201)
+              .send({ message: "you have an access of this file" });
+          }
+        );
+      }
+    );
+  } catch (error) {
     res.status(500).send({ error });
   }
 };
@@ -204,10 +189,8 @@ export const getDetails = async (req: Request, res: Response) => {
       if (err) {
         console.log(err);
       }
-       return res.status(200).send({ result });
-     
-      
-      });
+      return res.status(200).send({ result });
+    });
   } catch {
     res.status(500).send({ error: "file donot present in database" });
   }
@@ -238,7 +221,7 @@ interface upload extends Request {
 }
 export const specificPermissions = async (req: Request, res: Response) => {
   let uploadReq = req as upload;
-const { filepaths, user_id } = uploadReq.body
+  const { filepaths, user_id } = uploadReq.body;
   try {
     let sql1 = `DELETE from permissions where  user_id=${user_id}  AND uploadinfo_path="${filepaths}"`;
 
@@ -246,7 +229,7 @@ const { filepaths, user_id } = uploadReq.body
       if (err) {
         console.log(err);
       }
-console.log(result)
+      console.log(result);
       if (result.affectedRows > 0) {
         return res.send({ message: "Permission removed to given user" });
       } else {

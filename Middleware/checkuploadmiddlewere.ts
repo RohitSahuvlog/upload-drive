@@ -12,7 +12,7 @@ export const checkupload = (
 ) => {
   var imagepath = req.path;
   var t = imagepath.split("/")[1];
-  console.log(t)
+  console.log(t);
   try {
     let sql = `SELECT * from uploadinfo where owner_id=${req.userId} AND filepath="${t}"`;
 
@@ -20,7 +20,7 @@ export const checkupload = (
       if (err) {
         console.log(err);
       }
-      console.log(result)
+      console.log(result);
       if (result.length > 0) {
         next();
       } else {
@@ -38,6 +38,6 @@ export const checkupload = (
       }
     });
   } catch {
-    res.status(500).send({error:"err in uploadauthentication"});
+    res.status(500).send({ error: "err in uploadauthentication" });
   }
 };
