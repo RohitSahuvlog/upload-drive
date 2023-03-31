@@ -203,8 +203,7 @@ export const permissionsUpdate = (req: Request, res: Response) => {
   try {
     connection.query(
       "SELECT * FROM user WHERE email =?",
-      [user_email],
-      async (err: Error, result: any) => {
+      [user_email],(err: Error, result: any) => {
         if (err) throw err;
         let accessuserid;
         if (result.length > 0) {
