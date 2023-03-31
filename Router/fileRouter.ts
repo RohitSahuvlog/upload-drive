@@ -8,6 +8,7 @@ import {
   getDetails,
   deletePermissions,
   specificPermissions,
+  permissionsUpdate,
 } from "../Controller/fileController";
 import multer from "multer";
 
@@ -25,7 +26,7 @@ router.post("/upload", upload.array("file", 5), postFile);
 router.post("/permission/add/:id", uploadauthentication, permissionsFunc);
 router.post("/permission/remove", uploadauthentication, specificPermissions);
 router.delete("/permissiondelete/:id", uploadauthentication, deletePermissions);
-
+router.post("/permission/update/:id", uploadauthentication, permissionsUpdate);
 router.post("/delete", uploadauthentication, deleteFile);
 router.post(
   "/update/:id",

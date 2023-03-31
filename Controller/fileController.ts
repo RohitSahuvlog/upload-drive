@@ -196,6 +196,46 @@ export const getDetails = async (req: Request, res: Response) => {
   }
 };
 
+export const permissionsUpdate = (req: Request, res: Response) => {
+  let uploadReq = req as uploadRequest1;
+  const { permissiontype, user_email } = req.body;
+
+  try {
+    connection.query(
+      "SELECT * FROM user WHERE email =?",
+      [user_email],
+      async (err: Error, result: any) => {
+        if (err) throw err;
+        let accessuserid;
+        if (result.length > 0) {
+          accessuserid = result[0].id;
+        }
+
+        let sql2 = `UPDATE INTO permissions SET where user_id=${accessuserid} ?`;
+        connection.query(
+          sql2,
+          {
+            user_id: accessuserid,
+            uploadinfo_path: uploadReq.params.id,
+            permission_type: permissiontype,
+          },
+          (err: Error, result: any) => {
+            if (err) {
+              console.log(err);
+            }
+
+            return res.send({
+              message: "permission has been updated successfully",
+            });
+          }
+        );
+      }
+    );
+  } catch (error) {
+   res.status(500).send({ error });
+  }
+};
+
 export const deletePermissions = async (req: Request, res: Response) => {
   try {
     let sql1 = `DELETE from permissions where  uploadinfo_path="${req.params.id}"`;
