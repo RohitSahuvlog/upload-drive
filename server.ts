@@ -5,6 +5,7 @@ import path from "path";
 import userRoutes from "./Router/userRoutes";
 import authentication from "./Middleware/authentication";
 import { checkupload } from "./Middleware/checkuploadmiddlewere";
+import "./Config/sequilize.db";
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
