@@ -1,6 +1,5 @@
-import { Sequelize, DataType } from "sequelize-typescript";
+import { Sequelize } from "sequelize";
 
-var mysql = require("mysql");
 const sequelize = new Sequelize("fileuploads", "root", "password", {
   host: "localhost",
   dialect: "mysql",
