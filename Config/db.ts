@@ -4,7 +4,7 @@ require("dotenv").config();
 var connection = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "password",
+  password: "rohit@123",
   database: "fileuploads",
   insecureAuth: true,
 });
