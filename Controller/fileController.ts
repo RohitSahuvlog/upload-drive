@@ -1,6 +1,6 @@
 import express, { Response, Request } from "express";
-import connection from "../Config/db";
 import fs from "fs";
+import connection from "../Config/db";
 interface uploadRequest extends Request {
   userId?: any;
   files: Array<any>;
