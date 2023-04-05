@@ -2,16 +2,16 @@ import { QueryTypes } from "sequelize";
 import { sequelize } from "../Config/sequilize.db";
 
 export class User {
-  static insertUser(email: String, name: String, password: String) {
+  static async insertUser(email: String, name: String, password: String) {
     let sql = `INSERT INTO user SET email="${email}",name="${name}",password="${password}"`;
-    var result = sequelize
+    var result = await sequelize
       .query(sql, { type: QueryTypes.INSERT })
       .then((res) => console.log(res))
       .catch((err) => err);
     return result;
   }
-  static getUserByEmail(email: String) {
-    var result = sequelize
+  static async getUserByEmail(email: String) {
+    var result = await sequelize
       .query(`SELECT * FROM user WHERE email ='${email}'`, {
         type: QueryTypes.SELECT,
       })
@@ -20,8 +20,8 @@ export class User {
     return result;
   }
 
-  static getUserById(userId: Number) {
-    var result = sequelize
+  static async getUserById(userId: Number) {
+    var result = await sequelize
       .query(`SELECT * FROM user WHERE id=${userId}`, {
         type: QueryTypes.SELECT,
       })
