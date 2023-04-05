@@ -1,4 +1,5 @@
 import { Router } from "express";
+import multer from "multer";
 import {
   postFile,
   getFile,
@@ -10,29 +11,29 @@ import {
   specificPermissions,
   permissionsUpdate,
 } from "../Controller/fileController";
-import multer from "multer";
+
 
 import storage from "../Middleware/fileconfig";
 import uploadauthentication from "../Middleware/uploadmiddlewere";
 
-const router = Router();
+const fileRouter = Router();
 const fileFilter = (req: any, file: any, cb: any) => {
   cb(null, true);
 };
 const upload = multer({ storage: storage, fileFilter: fileFilter });
-router.get("/user/myfiles", getFile);
-router.get("/details", getDetails);
-router.post("/upload", upload.array("file", 5), postFile);
-router.post("/permission/add/:id", uploadauthentication, permissionsFunc);
-router.post("/permission/remove", uploadauthentication, specificPermissions);
-router.delete("/permissiondelete/:id", uploadauthentication, deletePermissions);
-router.post("/permission/update/:id", uploadauthentication, permissionsUpdate);
-router.post("/delete", uploadauthentication, deleteFile);
-router.post(
+fileRouter.get("/user/myfiles", getFile);
+fileRouter.get("/details", getDetails);
+fileRouter.post("/upload", upload.array("file", 5), postFile);
+fileRouter.post("/permission/add/:id", uploadauthentication, permissionsFunc);
+fileRouter.post("/permission/remove", uploadauthentication, specificPermissions);
+fileRouter.delete("/permissiondelete/:id", uploadauthentication, deletePermissions);
+fileRouter.post("/permission/update/:id", uploadauthentication, permissionsUpdate);
+fileRouter.post("/delete", uploadauthentication, deleteFile);
+fileRouter.post(
   "/update/:id",
   uploadauthentication,
   upload.array("file", 5),
   replaceFile
 );
 
-export default router;
+export default fileRouter;

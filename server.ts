@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import router from "./Router/fileRouter";
+import fileRouter from "./Router/fileRouter";
 import path from "path";
 import userRoutes from "./Router/userRoutes";
 import authentication from "./Middleware/authentication";
@@ -13,7 +13,7 @@ app.use(bodyParser.raw({ type: "application/vnd.custom-type" }));
 
 app.use("/user", userRoutes);
 app.use(authentication);
-app.use("/file", router);
+app.use("/file", fileRouter);
 app.use("/uploads", checkupload, express.static(path.resolve("uploads")));
 
 const port = 3000;

@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import dotenv from "dotenv";
-import connection from "../Config/db";
-dotenv.config();
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import connection from "../Config/db";
+dotenv.config();
+
 
 const registerUser = async (req: Request, res: Response) => {
   const { name, email, password, pic } = req.body;
