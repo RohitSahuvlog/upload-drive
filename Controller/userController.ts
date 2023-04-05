@@ -2,9 +2,8 @@ import { Request, Response } from "express";
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import connection from "../Config/db";
+import { User } from "../db_helper/user";
 dotenv.config();
-
 
 const registerUser = async (req: Request, res: Response) => {
   const { name, email, password, pic } = req.body;
@@ -13,72 +12,58 @@ const registerUser = async (req: Request, res: Response) => {
     res.status(400);
     throw new Error("Please Enter all the Feilds");
   }
-  connection.query(
-    "SELECT email FROM user WHERE email =?",
-    [email],
-    async (err: Error, result: any) => {
-      if (err) throw err;
-      if (result.length > 0) {
-        return res.send({ message: "this email  used already" });
-      }
+  var userDetails = await User.getUserByEmail(email);
 
-      var t = await bcrypt.hash(password, 8);
-      let sql = "INSERT INTO user SET ?";
-      connection.query(
-        sql,
-        { name, email, password: t },
-        (err: Error, user: any) => {
-          if (err) {
-            res.status(400);
-          } else if (user) {
-            return res
-              .status(201)
-              .send({ message: " this user have  Registered successfully" });
-          }
-        }
-      );
-    }
-  );
+  if (userDetails.length > 0) {
+    return res.send({ message: "this email  used already" });
+  }
+
+  var hashpassword = await bcrypt.hash(password, 8);
+
+  var insertResponse = await User.insertUser(email, name, hashpassword);
+  if (insertResponse) {
+    return res
+      .status(201)
+      .send({ message: " this user have  Registered successfully" });
+  }
 };
 
 //login
-const authUser = (req: Request, res: Response) => {
+const logUser = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   if (email && password) {
-    let sql = `SELECT * FROM user WHERE email="${email}"`;
+    var userDetails = await User.getUserByEmail(email);
 
-    connection.query(sql, (err: Error, user: any) => {
-      if (err) throw err;
-      if (user.length > 0) {
-        var hash = user[0].password;
-        bcrypt.compare(password, hash, (err: Error, users: any) => {
-          if (err) {
-            res.status(400);
-            throw new Error("User not found");
-          }
+    if (userDetails.length !== 0) {
+      var hash = userDetails[0].password;
 
-          if (users) {
-            var token = jwt.sign(
-              { email, userId: user[0].id },
-              process.env.SECRET || ""
-            );
-            return res.status(200).send({
-              id: user[0].id,
-              name: user[0].name,
-              email: user[0].email,
-              pic: user[0].pic,
-              token,
-            });
-          } else {
-            return res
-              .status(500)
-              .send({ error: "You are writing incorrect password" });
-          }
-        });
-      } else {
-        return res.status(500).send({ error: "Your email is incorrect" });
-      }
-    });
+      bcrypt.compare(password, hash, (err: Error, users: any) => {
+        if (err) {
+          res.status(400);
+          throw new Error("User not found");
+        }
+
+        if (users) {
+          var token = jwt.sign(
+            { email, userId: userDetails[0].id },
+            process.env.JWT_SECRET || ""
+          );
+          return res.status(200).send({
+            id: userDetails[0].id,
+            name: userDetails[0].name,
+            email: userDetails[0].email,
+            pic: userDetails[0].pic,
+            token,
+          });
+        } else {
+          return res
+            .status(500)
+            .send({ error: "You are writing incorrect password" });
+        }
+      });
+    } else {
+      return res.status(500).send({ error: "Your email is incorrect" });
+    }
   } else {
     res
       .status(500)
@@ -86,4 +71,4 @@ const authUser = (req: Request, res: Response) => {
   }
 };
 
-export { registerUser, authUser };
+export { registerUser, logUser };
