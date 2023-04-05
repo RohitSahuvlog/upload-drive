@@ -16,7 +16,7 @@ const registerUser = async (req: Request, res: Response) => {
     var userDetails: any = await User.getUserByEmail(email);
 
     if (userDetails.length > 0) {
-      return res.send({ message: "this email  used already" });
+      return res.send({ message: "Email id is used" });
     }
 
     var hashpassword = await bcrypt.hash(password, 8);
@@ -26,10 +26,10 @@ const registerUser = async (req: Request, res: Response) => {
     if (insertResponse) {
       return res
         .status(201)
-        .send({ message: " this user have  Registered successfully" });
+        .send({ message: "User registered successfully" });
     } else {
       return res
-        .status(201)
+        .status(400)
         .send({ message: "User registration failed please try again later" });
     }
   } catch (error) {
@@ -50,7 +50,7 @@ const loginUser = async (req: Request, res: Response) => {
 
     var userDetails: any = await User.getUserByEmail(email);
     if (userDetails.length == 0) {
-      return res.status(400).send({ error: "Your email is incorrect" });
+      return res.status(400).send({ error: "User not found" });
     }
 
     var hash = userDetails[0].password;
@@ -59,7 +59,7 @@ const loginUser = async (req: Request, res: Response) => {
     if (!users) {
       return res
         .status(400)
-        .send({ error: "You are writing incorrect password" });
+        .send({ error: "Incorrect password" });
     }
 
     var token = jwt.sign(
