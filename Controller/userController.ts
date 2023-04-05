@@ -44,7 +44,7 @@ const loginUser = async (req: Request, res: Response) => {
   try {
     if (!email && !password) {
       return res
-        .status(500)
+        .status(400)
         .send({ error: "Please Enter Email Address and Password Details" });
     }
 
