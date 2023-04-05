@@ -13,7 +13,7 @@ const registerUser = async (req: Request, res: Response) => {
       res.status(400);
       throw new Error("Please Enter all the Feilds");
     }
-    var userDetails = await User.getUserByEmail(email);
+    var userDetails: any = await User.getUserByEmail(email);
 
     if (userDetails.length > 0) {
       return res.send({ message: "this email  used already" });
@@ -21,11 +21,16 @@ const registerUser = async (req: Request, res: Response) => {
 
     var hashpassword = await bcrypt.hash(password, 8);
 
-    var insertResponse = await User.insertUser(email, name, hashpassword);
+    var insertResponse: any = await User.insertUser(email, name, hashpassword);
+
     if (insertResponse) {
       return res
         .status(201)
         .send({ message: " this user have  Registered successfully" });
+    } else {
+      return res
+        .status(201)
+        .send({ message: "User registration failed please try again later" });
     }
   } catch (error) {
     res.status(500).send({ error: "internal server error" });
@@ -43,9 +48,9 @@ const loginUser = async (req: Request, res: Response) => {
         .send({ error: "Please Enter Email Address and Password Details" });
     }
 
-    var userDetails = await User.getUserByEmail(email);
+    var userDetails: any = await User.getUserByEmail(email);
     if (userDetails.length == 0) {
-      return res.status(500).send({ error: "Your email is incorrect" });
+      return res.status(400).send({ error: "Your email is incorrect" });
     }
 
     var hash = userDetails[0].password;
@@ -53,7 +58,7 @@ const loginUser = async (req: Request, res: Response) => {
 
     if (!users) {
       return res
-        .status(500)
+        .status(400)
         .send({ error: "You are writing incorrect password" });
     }
 

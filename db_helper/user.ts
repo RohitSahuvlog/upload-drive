@@ -4,29 +4,37 @@ import { sequelize } from "../Config/sequilize.db";
 export class User {
   static async insertUser(email: String, name: String, password: String) {
     let sql = `INSERT INTO user SET email="${email}",name="${name}",password="${password}"`;
-    var result = await sequelize
+     await sequelize
       .query(sql, { type: QueryTypes.INSERT })
-      .then((res) => console.log(res))
-      .catch((err) => err);
-    return result;
+      .then((res) => {
+        return res;
+      })
+      .catch((err) =>{
+        return err;
+      });
   }
   static async getUserByEmail(email: String) {
-    var result = await sequelize
+     await sequelize
       .query(`SELECT * FROM user WHERE email ='${email}'`, {
         type: QueryTypes.SELECT,
       })
-      .then((res) => res)
-      .catch((err) => err);
-    return result;
+         .then((res) => {
+             console.log("in getuserbyemail respose is b ",res)
+        return res;
+      })
+      .catch((err) =>  {
+        return err;
+      });
   }
 
   static async getUserById(userId: Number) {
-    var result = await sequelize
+   await sequelize
       .query(`SELECT * FROM user WHERE id=${userId}`, {
         type: QueryTypes.SELECT,
       })
-      .then((res) => res)
-      .catch((err) => err);
-    return result;
+      .then((res) => {return res } )
+        .catch((err) =>{ return err});
+     
+    
   }
 }
