@@ -28,4 +28,17 @@ export class Permission {
       return false;
     }
   }
+  static async hasOwnerFileAccess(userId: number, Id: String) {
+    var result = await sequelize.query(
+      `SELECT * from uploadinfo where owner_id=${userId} AND  filepath="${Id}"`,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    if (result.length !== 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

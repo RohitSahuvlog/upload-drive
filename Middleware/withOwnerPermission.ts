@@ -7,14 +7,14 @@ interface MyUserRequest extends Request {
   userId: number;
 }
 
-const withWritePermission = async (
+const withOwnerPermission = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   var ReqAuth = req as MyUserRequest;
   try {
-    var hasPermission = await Permission.hasUserFileUpdateAccess(
+    var hasPermission = await Permission.hasOwnerFileAccess(
       ReqAuth.userId,
       ReqAuth.params.id
     );
@@ -24,8 +24,8 @@ const withWritePermission = async (
       return res.status(403).send({ error: "UnAuthorized" });
     }
   } catch {
-    res.status(500).send({ error: "err in withWritePermission" });
+    res.status(500).send({ error: "err in withOwnerPermission" });
   }
 };
 
-export default withWritePermission;
+export default withOwnerPermission;
