@@ -8,17 +8,17 @@ interface MyUserRequest extends Request {
 }
 
 const withReadpermission = async (
-  req: MyUserRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const userId = req.userId;
+  var Reqauth = req as MyUserRequest;
   try {
-    var permissiondetails = await Permission.getUserByfilepath(
-      userId,
+    var permissiondetails = await Permission.hasUserFileAccess(
+      Reqauth.userId,
       req.params.id
     );
-    if (permissiondetails.length > 0) {
+    if (permissiondetails) {
       return next();
     }
   } catch {
