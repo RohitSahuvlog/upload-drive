@@ -20,6 +20,8 @@ const withWritepermission = async (
     );
     if (permissiondetails) {
       return next();
+    } else {
+      return res.status(403).send({ error: " you havenot Authorized for update the file" });
     }
   } catch {
     res.status(500).send({ error: "err in withWritepermission" });
