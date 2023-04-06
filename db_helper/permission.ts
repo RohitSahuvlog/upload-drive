@@ -41,4 +41,14 @@ export class Permission {
       return false;
     }
   }
+  static async hasOwnerFile(userId: number) {
+    let sql1 = `SELECT DISTINCT user.id,uploadinfo.id,filepath,create_at,update_at,size,owner_id,
+     user_id,filename,name,email from user join uploadinfo  on uploadinfo.owner_id=user.id
+     join permissions ON  permissions.uploadinfo_path =uploadinfo.filepath  where user_id=${userId}`;
+    var result = await sequelize.query(sql1, {
+      type: QueryTypes.SELECT,
+    });
+
+    return result;
+  }
 }
