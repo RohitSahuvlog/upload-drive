@@ -14,7 +14,7 @@ const withWritepermission = async (
 ) => {
   var Reqauth = req as MyUserRequest;
   try {
-    var permissiondetails = await Permission.hasUserFileAccess(
+    var permissiondetails = await Permission.hasUserFileUpdateAccess(
       Reqauth.userId,
       req.params.id
     );

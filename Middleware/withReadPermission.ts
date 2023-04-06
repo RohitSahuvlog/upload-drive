@@ -14,7 +14,7 @@ const withReadPermission = async (
 ) => {
   const ReqAuth = req as MyUserRequest;
   try {
-    const hasPermission = await Permission.hasUserFileAccess(
+    const hasPermission = await Permission.hasUserFileReadAccess(
       ReqAuth.userId,
       req.params.id
     );
