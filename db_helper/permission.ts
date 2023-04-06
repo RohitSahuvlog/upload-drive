@@ -2,9 +2,9 @@ import { QueryTypes } from "sequelize";
 import { sequelize } from "../Config/sequilize.db";
 
 export class Permission {
-  static async hasUserFileReadAccess(userId: number, Id: String) {
+  static async hasUserFileAccess(userId: number, Id: String) {
     var result = await sequelize.query(
-      `SELECT * from permissions where user_id=${userId} AND  uploadinfo_path="${Id}"`,
+      `SELECT * from permissions where user_id=${userId} AND  uploadinfo_path="${Id}" AND (permission_type=2 || permission_type=1) `,
       {
         type: QueryTypes.SELECT,
       }
