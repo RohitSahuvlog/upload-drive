@@ -56,17 +56,7 @@ export const postFile = async (req: Request, res: Response) => {
   }
 };
 
-export const getFile = async (req: Request, res: Response) => {
-  let uploadReq = req as uploadRequest;
 
-  try {
-  var  ownerFile = await Permission.hasOwnerFile(uploadReq.userId)
-        return res.status(200).send({ ownerFile });
-    
-  } catch {
-    res.status(500).send({ error: "file donot present in database" });
-  }
-};
 
 export const deleteFile = async (req: Request, res: Response) => {
   let uploadReq = req as uploadRequest;

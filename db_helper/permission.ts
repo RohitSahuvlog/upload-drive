@@ -42,7 +42,7 @@ export class Permission {
     }
   }
   static async hasOwnerFile(userId: number) {
-    let sql1 = `SELECT * from uploadinfo where owner_id=${userId} `;
+    let sql1 = `SELECT * from permissions where user_id=${userId}  `;
     var result = await sequelize.query(sql1, {
       type: QueryTypes.SELECT,
     });
