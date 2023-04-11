@@ -87,7 +87,18 @@ interface uploadRequest extends Request {
   let uploadReq = req as uploadRequest;
 
   try {
-    var ownerFile = await Permission.hasOwnerFile(uploadReq.userId);
+    const ownerFile: Array<any> = await Permission.hasOwnerFile(
+      uploadReq.userId
+    );
+    for (var i = 0; i < ownerFile.length; i++) {
+      ownerFile[i] = {
+        ...ownerFile[i],
+        ownername: ownerFile[i].name,
+        owneremail: ownerFile[i].email,
+      };
+      delete ownerFile[i].name;
+      delete ownerFile[i].email;
+    }
     return res.status(200).send({ ownerFile });
   } catch {
     res.status(500).send({ error: "file donot present in database" });
