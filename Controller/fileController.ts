@@ -9,51 +9,24 @@ interface uploadRequest extends Request {
 }
 
 export const postFile = async (req: Request, res: Response) => {
-  let uploadReq = req as uploadRequest;
+  
+    const uploadReq = req as uploadRequest;
+    const userId = uploadReq.userId;
+    const fileName = uploadReq.files[0]["filename"];
+    const originalName = uploadReq.files[0]["originalname"];
+    const filePath = `./uploads/${fileName}`;
   try {
-    await fs.stat(
-      `./uploads/${uploadReq.files[0]["filename"]}`,
-      async (err, fileStats) => {
-        if (err) {
-          console.log(err);
-        } else {
-          let size = fileStats.size;
-          console.log(size);
-          let sql = "INSERT INTO uploadinfo SET  ?";
-          await connection.query(
-            sql,
-            {
-              owner_id: uploadReq.userId,
-              filepath: uploadReq.files[0]["filename"],
-              filename: uploadReq.files[0]["originalname"],
-              size,
-            },
-            (err: Error, result: any) => {
-              if (err) {
-                console.log(err);
-              }
-            }
-          );
-          let sql1 = "INSERT INTO permissions SET  ?";
-          await connection.query(
-            sql1,
-            {
-              uploadinfo_path: uploadReq.files[0]["filename"],
-              user_id: uploadReq.userId,
-              permission_type: 2,
-            },
-            (err: Error, result: any) => {
-              if (err) {
-                console.log(err);
-              }
-              return res.status(201).send({ message: "file uploads by owner" });
-            }
-          );
-        }
-      }
-    );
+     
+
+    const fileStats = fs.statSync(filePath);
+     const size = fileStats.size;
+     const [upload, uploadPermision] = await Promise.all([
+     File.uploadFile(userId, fileName, originalName, size),
+     File.uploadFilePermission(fileName, userId, 2)]);
+       return res.status(201).send({ message: "file uploads by owner" });
   } catch (err) {
-    res.status(500).send({ error: "file dont post" });
+    console.log(err)
+    res.status(500).send({ error: "file donot post" });
   }
 };
 
