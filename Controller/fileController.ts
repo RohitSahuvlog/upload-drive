@@ -1,6 +1,7 @@
 import express, { Response, Request } from "express";
 import fs from "fs";
 import connection from "../Config/db";
+import { Permission } from "../db_helper/permission";
 interface uploadRequest extends Request {
   userId?: any;
   files: Array<any>;
@@ -55,24 +56,7 @@ export const postFile = async (req: Request, res: Response) => {
   }
 };
 
-export const getFile = async (req: Request, res: Response) => {
-  let uploadReq = req as uploadRequest;
 
-  try {
-    let sql1 = `SELECT DISTINCT user.id,uploadinfo.id,filepath,create_at,update_at,size,owner_id,
-  user_id,filename,name,email from user join uploadinfo  on uploadinfo.owner_id=user.id 
-   join permissions ON  permissions.uploadinfo_path =uploadinfo.filepath  where user_id=${uploadReq.userId}`;
-    connection.query(sql1, (err: Error, result2: any) => {
-      if (err) {
-        console.log(err);
-      }
-
-      return res.status(200).send({ result2 });
-    });
-  } catch {
-    res.status(500).send({ error: "file donot present in database" });
-  }
-};
 
 export const deleteFile = async (req: Request, res: Response) => {
   let uploadReq = req as uploadRequest;

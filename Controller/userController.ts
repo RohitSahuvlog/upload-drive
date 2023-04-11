@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { User } from "../db_helper/user";
+import { Permission } from "../db_helper/permission";
 dotenv.config();
 
 const registerUser = async (req: Request, res: Response) => {
@@ -78,4 +79,30 @@ const loginUser = async (req: Request, res: Response) => {
   }
 };
 
-export { registerUser, loginUser };
+interface uploadRequest extends Request {
+  userId?: any;
+  files: Array<any>;
+}
+ const getFile = async (req: Request, res: Response) => {
+  let uploadReq = req as uploadRequest;
+
+  try {
+    const ownerFile: Array<any> = await Permission.hasOwnerFile(
+      uploadReq.userId
+    );
+    for (var i = 0; i < ownerFile.length; i++) {
+      ownerFile[i] = {
+        ...ownerFile[i],
+        ownername: ownerFile[i].name,
+        owneremail: ownerFile[i].email,
+      };
+      delete ownerFile[i].name;
+      delete ownerFile[i].email;
+    }
+    return res.status(200).send({ ownerFile });
+  } catch {
+    res.status(500).send({ error: "file donot present in database" });
+  }
+};
+
+export { registerUser, loginUser, getFile };

@@ -2,7 +2,6 @@ import { Router } from "express";
 import multer from "multer";
 import {
   postFile,
-  getFile,
   deleteFile,
   replaceFile,
   permissionsFunc,
@@ -20,8 +19,10 @@ const fileRouter = Router();
 const fileFilter = (req: any, file: any, cb: any) => {
   cb(null, true);
 };
+
+
 const upload = multer({ storage: storage, fileFilter: fileFilter });
-fileRouter.get("/user/myfiles", getFile);
+
 fileRouter.get("/details", getDetails);
 fileRouter.post("/upload", upload.array("file", 5), postFile);
 fileRouter.post("/permission/add/:id", uploadauthentication, permissionsFunc);
