@@ -1,6 +1,7 @@
 import express, { Response, Request } from "express";
 import fs from "fs";
 import connection from "../Config/db";
+import { File } from "../db_helper/file";
 import { User } from "../db_helper/user";
 interface uploadRequest extends Request {
   userId?: any;
@@ -165,12 +166,11 @@ export const getDetails = async (req: Request, res: Response) => {
   let uploadReq = req as uploadRequest;
 
   try {
-    const result: Array<any> = await User.getOwnerFileDetails(uploadReq.params.id);
-     var accessUser = await User.getFileDetails(uploadReq.params.id);
-      var array = [{...result[0], accessUser}];
+    const result: Array<any> = await File.getFileDetails(uploadReq.params.id);
+     var accessUser = await User.getAccessListUser(uploadReq.params.id);
+      var array = {...result[0], accessUser};
       return res.status(200).send(array);
   } catch (err) {
-    console.log(err);
     res.status(500).send({ error: "file donot present in database" });
   }
 };
