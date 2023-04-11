@@ -165,25 +165,12 @@ export const getDetails = async (req: Request, res: Response) => {
   let uploadReq = req as uploadRequest;
 
   try {
-    const result: Array<any> = await User.getOwnerFileDetails(
-      uploadReq.userId,
-      uploadReq.params.id
-    );
-
-    let accessUser: Array<any> = [];
-    let obj = { accessUser };
-
-    for (var i = 0; i < result.length; i++) {
-      var data = await User.getUserById(result[i].user_id);
-
-      obj = {
-        ...result[i],
-        accessUser: [...obj.accessUser, ...data],
-      };
-    
-    }
-     return res.status(200).send( obj );
-  } catch {
+    const result: Array<any> = await User.getOwnerFileDetails(uploadReq.params.id);
+     var accessUser = await User.getFileDetails(uploadReq.params.id);
+      var array = [{...result[0], accessUser}];
+      return res.status(200).send(array);
+  } catch (err) {
+    console.log(err);
     res.status(500).send({ error: "file donot present in database" });
   }
 };

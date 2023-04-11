@@ -17,21 +17,31 @@ export class User {
   }
 
   static async getUserById(userId: Number) {
-    var result = await sequelize
-      .query(`SELECT user.id,name,email FROM user WHERE id=${userId}`, {
+    var result = await sequelize.query(
+      `SELECT user.id,name,email FROM user WHERE id=${userId}`,
+      {
         type: QueryTypes.SELECT,
-      });
-     
+      }
+    );
+
     return result;
   }
-  static async getOwnerFileDetails(userId: Number, filepath:String) {
-    let sql1 = `SELECT DISTINCT user.id,uploadinfo.id,filepath,create_at,update_at,size,owner_id,
-  user_id,filename,name,email from user join uploadinfo  on uploadinfo.owner_id=user.id 
-   join permissions ON  permissions.uploadinfo_path =uploadinfo.filepath where  filepath='${filepath}' `;
-
+  static async getOwnerFileDetails( filepath: String) {
+    let sql1 = `SELECT  * from uploadinfo  where  filepath='${filepath}' `;
     var result = await sequelize.query(sql1, {
       type: QueryTypes.SELECT,
     });
-     return result;
+    return result;
   }
+
+  static async getFileDetails(filepath: String) {
+   let sql1 = `SELECT user.id,name,email,permission_type
+    from permissions join user on permissions.user_id=user.id 
+    where uploadinfo_path="${filepath}"`;
+   var result = await sequelize.query(sql1, {
+     type: QueryTypes.SELECT,
+   });
+    return result;
+  }
+  
 }
