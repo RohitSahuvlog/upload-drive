@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { User } from "../db_helper/user";
-import { Permission } from "../db_helper/permission";
+import { File } from "../db_helper/file";
 dotenv.config();
 
 const registerUser = async (req: Request, res: Response) => {
@@ -87,7 +87,7 @@ interface uploadRequest extends Request {
   let uploadReq = req as uploadRequest;
 
   try {
-    const ownerFile: Array<any> = await Permission.ownerFile(uploadReq.userId);
+    const ownerFile: Array<any> = await File.ownerFile(uploadReq.userId);
     for (var i = 0; i < ownerFile.length; i++) {
       ownerFile[i] = {
         ...ownerFile[i],
