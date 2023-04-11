@@ -87,9 +87,7 @@ interface uploadRequest extends Request {
   let uploadReq = req as uploadRequest;
 
   try {
-    const ownerFile: Array<any> = await Permission.hasOwnerFile(
-      uploadReq.userId
-    );
+    const ownerFile: Array<any> = await Permission.ownerFile(uploadReq.userId);
     for (var i = 0; i < ownerFile.length; i++) {
       ownerFile[i] = {
         ...ownerFile[i],

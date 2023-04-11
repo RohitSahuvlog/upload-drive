@@ -41,7 +41,7 @@ export class Permission {
       return false;
     }
   }
-  static async hasOwnerFile(userId: number) {
+  static async ownerFile(userId: number) {
     let q1 = `SELECT  user.id,uploadinfo.id,filepath,create_at,update_at,size,owner_id,
   user_id,filename,name,email from user join uploadinfo  on user.id =uploadinfo.owner_id
    join permissions ON  permissions.uploadinfo_path =uploadinfo.filepath  where user_id=${userId}  `;
