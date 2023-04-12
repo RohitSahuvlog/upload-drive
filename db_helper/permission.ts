@@ -50,4 +50,16 @@ export class Permission {
     var result = await sequelize.query(sql, { type: QueryTypes.INSERT });
     return result;
   }
+  static async updatePermission(
+    uploadinfo_path: string,
+    user_id: number,
+    permission_type: string
+  ) {
+    const sql = `UPDATE permissions SET uploadinfo_path = ?, permission_type = ? WHERE user_id = ?`;
+    const result = await sequelize.query(sql, {
+      type: QueryTypes.UPDATE,
+      replacements: [uploadinfo_path, permission_type, user_id],
+    });
+    return result;
+  }
 }

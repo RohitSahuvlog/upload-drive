@@ -7,8 +7,8 @@ import {
   getDetails,
   deletePermissions,
   specificPermissions,
-  permissionsUpdate,
   addPermisions,
+  updatePermission,
 } from "../Controller/fileController";
 
 
@@ -30,7 +30,11 @@ fileRouter.post("/upload", upload.array("file", 5), postFile);
 fileRouter.post("/permission/add/:id", withOwnerPermission, addPermisions);
 fileRouter.post("/permission/remove", uploadauthentication, specificPermissions);
 fileRouter.delete("/permissiondelete/:id", uploadauthentication, deletePermissions);
-fileRouter.post("/permission/update/:id", uploadauthentication, permissionsUpdate);
+fileRouter.post(
+  "/permission/update/:id",
+  withOwnerPermission,
+  updatePermission
+);
 fileRouter.post("/delete", uploadauthentication, deleteFile);
 fileRouter.post(
   "/update/:id",
