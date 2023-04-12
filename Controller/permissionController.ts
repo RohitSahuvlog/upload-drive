@@ -41,9 +41,10 @@ export const updatePermission = async (req: Request, res: Response) => {
     if (!filepath ||  !permissiontype || !email) {
       return res.status(400).send({ message: "Please Enter all the Feilds" });
     }
-    if(![1,2].includes(permissiontype)) {
-         return res.status(400).send({ message: "Please Enter valid permission type" });
-       }
+    if(permissiontype != 1 && permissiontype != 2) {
+      return res.status(400).send({ message: "Please Enter valid permission type" });
+    }
+    
     let userDetails: any = await User.getUserByEmail(email);
     if (!userDetails || !userDetails.length) {
       return res.status(404).send({ error: "User not found" });
