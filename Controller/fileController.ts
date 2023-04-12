@@ -34,10 +34,12 @@ export const deleteFile = async (req: Request, res: Response) => {
   let uploadReq = req as upload;
   let filepath = uploadReq.params.id;
   let routeFile = `./uploads/${filepath}`;
+
   try {
     await fs.unlinkSync(routeFile);
     let deletePermission: any = await Permission.deletePermission(filepath);
     let deleteFile: any = await File.deleteFile(filepath);
+
     return res.send({ message: "file has been deleted" });
   } catch (error) {
     return res.status(500).send({ error: "file donot present in database" });
@@ -100,17 +102,20 @@ export const specificPermissions = async (req: Request, res: Response) => {
   let uploadReq = req as upload;
   const { user_email } = uploadReq.body;
   let filepath = uploadReq.params.id;
+
   try {
     const userDetails: any = await User.getUserByEmail(user_email);
     if (!userDetails || !userDetails.length) {
       return res.status(404).send({ error: "User not found" });
     }
     const userid = userDetails[0].id;
+
     let deletePermission: any = await Permission.deleteSpecificPermission(
       userid,
       filepath
     );
-    return res.send({ message: "Permission removed to given user" });
+
+    return res.send({ message: "Permission removed from given user" });
   } catch {
     res.status(500).send({ error: "file donot present in database" });
   }

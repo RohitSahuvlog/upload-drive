@@ -49,14 +49,20 @@ export const updatePermission = async (req: Request, res: Response) => {
     if (!userDetails || !userDetails.length) {
       return res.status(404).send({ error: "User not found" });
     }
+
     const userid = userDetails[0].id;
     let addpermission: any = await Permission.updatePermission(
       filepath,
       userid,
       permissiontype
     );
-  if (addpermission[1] === 0) return res.status(404).send({ error: "User have not authorized" });
+
+    if (addpermission[1] === 0) {
+      return res.status(404).send({ error: "User have not authorized" });
+    }
+
     return res.send({ message: "permission has been updated successfully" });
+
   } catch (error) {
     return res.status(500).send({ error });
   }

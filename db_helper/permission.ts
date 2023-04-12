@@ -15,6 +15,7 @@ export class Permission {
       return false;
     }
   }
+
   static async hasUserFileUpdateAccess(userId: number, Id: String) {
     var result = await sequelize.query(
       `SELECT * from permissions where user_id=${userId} AND  uploadinfo_path="${Id}" AND permission_type=2  `,
@@ -28,6 +29,7 @@ export class Permission {
       return false;
     }
   }
+
   static async hasOwnerFileAccess(userId: number, Id: String) {
     var result = await sequelize.query(
       `SELECT * from uploadinfo where owner_id=${userId} AND  filepath="${Id}"`,
@@ -41,6 +43,7 @@ export class Permission {
       return false;
     }
   }
+
   static async addPermision(
     uploadinfo_path: String,
     user_id: number,
@@ -69,7 +72,8 @@ export class Permission {
     const result = await sequelize.query(sql, { type: QueryTypes.DELETE });
     return result;
   }
-  static async deleteSpecificPermission(user_id:Number,filepath: string) {
+
+  static async deleteSpecificPermission(user_id: Number, filepath: string) {
     let sql = `DELETE from permissions where  user_id=${user_id}  AND uploadinfo_path="${filepath}"`;
     const result = await sequelize.query(sql, { type: QueryTypes.DELETE });
     return result;

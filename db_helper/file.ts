@@ -31,6 +31,7 @@ export class File {
     var result = await sequelize.query(sql, { type: QueryTypes.INSERT });
     return result;
   }
+  
   static async deleteFile(filepath: string) {
     let sql = `DELETE from uploadinfo where  filepath="${filepath}"`;
     const result = await sequelize.query(sql, { type: QueryTypes.DELETE });
