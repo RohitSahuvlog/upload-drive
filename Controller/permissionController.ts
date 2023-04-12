@@ -14,7 +14,7 @@ export const addPermisions = async (req: Request, res: Response) => {
   const filepath = uploadReq.params.id;
 
   try {
-    if (!permissiontype || !email) {
+    if (!filepath || !permissiontype || !email) {
       return res.status(400).send({ message: "Please Enter all the Feilds" });
     }
     const userDetails: any = await User.getUserByEmail(email);
@@ -38,9 +38,12 @@ export const updatePermission = async (req: Request, res: Response) => {
   const { permissiontype, email } = req.body;
   let filepath = uploadReq.params.id;
   try {
-    if (!permissiontype || !email) {
+    if (!filepath ||  !permissiontype || !email) {
       return res.status(400).send({ message: "Please Enter all the Feilds" });
     }
+    if(![1,2].includes(permissiontype)) {
+         return res.status(400).send({ message: "Please Enter valid permission type" });
+       }
     let userDetails: any = await User.getUserByEmail(email);
     if (!userDetails || !userDetails.length) {
       return res.status(404).send({ error: "User not found" });
@@ -51,7 +54,7 @@ export const updatePermission = async (req: Request, res: Response) => {
       userid,
       permissiontype
     );
-
+  if (addpermission[1] === 0) return res.status(404).send({ error: "User have not authorized" });
     return res.send({ message: "permission has been updated successfully" });
   } catch (error) {
     return res.status(500).send({ error });
