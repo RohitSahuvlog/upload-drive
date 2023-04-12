@@ -65,8 +65,13 @@ export class Permission {
   }
 
   static async deletePermission(filepath: string) {
-   let sql = `DELETE from permissions where  uploadinfo_path="${filepath}"`;
-    const result = await sequelize.query(sql, { type: QueryTypes.DELETE});
+    let sql = `DELETE from permissions where  uploadinfo_path="${filepath}"`;
+    const result = await sequelize.query(sql, { type: QueryTypes.DELETE });
+    return result;
+  }
+  static async deleteSpecificPermission(user_id:Number,filepath: string) {
+    let sql = `DELETE from permissions where  user_id=${user_id}  AND uploadinfo_path="${filepath}"`;
+    const result = await sequelize.query(sql, { type: QueryTypes.DELETE });
     return result;
   }
 }

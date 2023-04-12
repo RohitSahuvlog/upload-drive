@@ -98,21 +98,19 @@ interface upload extends Request {
 }
 export const specificPermissions = async (req: Request, res: Response) => {
   let uploadReq = req as upload;
-  const { filepaths, user_id } = uploadReq.body;
+  const { user_email } = uploadReq.body;
+  let filepath = uploadReq.params.id;
   try {
-    let sql1 = `DELETE from permissions where  user_id=${user_id}  AND uploadinfo_path="${filepaths}"`;
-
-    connection.query(sql1, async (err: Error, result: any) => {
-      if (err) {
-        console.log(err);
-      }
-      console.log(result);
-      if (result.affectedRows > 0) {
-        return res.send({ message: "Permission removed to given user" });
-      } else {
-        return res.send({ message: "Owner donot give to access this file" });
-      }
-    });
+    const userDetails: any = await User.getUserByEmail(user_email);
+    if (!userDetails || !userDetails.length) {
+      return res.status(404).send({ error: "User not found" });
+    }
+    const userid = userDetails[0].id;
+    let deletePermission: any = await Permission.deleteSpecificPermission(
+      userid,
+      filepath
+    );
+    return res.send({ message: "Permission removed to given user" });
   } catch {
     res.status(500).send({ error: "file donot present in database" });
   }
