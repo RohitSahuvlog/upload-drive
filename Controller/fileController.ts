@@ -19,14 +19,14 @@ export const postFile = async (req: Request, res: Response) => {
   try {
      const fileStats = fs.statSync(filePath);
      const size = fileStats.size;
-     const [addUpload, addUploadPermision] = await Promise.all([
+     const [addUpload, addPermision] = await Promise.all([
        File.addUpload(userId, fileName, originalName, size),
-       Permission.addUploadPermision(fileName, userId, 2),
+       Permission.addPermision(fileName, userId, 2),
      ]);
-       return res.status(201).send({ message: "file uploads by owner" });
+       return res.status(201).send({ message: "file uploaded successfully" });
   } catch (err) {
     console.log(err)
-    res.status(500).send({ error: "file donot post" });
+    res.status(500).send({ error: "Error uploading file" });
   }
 };
 

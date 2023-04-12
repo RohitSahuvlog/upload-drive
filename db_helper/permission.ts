@@ -41,7 +41,7 @@ export class Permission {
       return false;
     }
   }
-  static async addUploadPermision(
+  static async addPermision(
     uploadinfo_path: String,
     user_id: number,
     permission_type: number
