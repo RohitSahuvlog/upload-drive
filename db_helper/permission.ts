@@ -50,6 +50,7 @@ export class Permission {
     var result = await sequelize.query(sql, { type: QueryTypes.INSERT });
     return result;
   }
+
   static async updatePermission(
     uploadinfo_path: string,
     user_id: number,
@@ -60,6 +61,12 @@ export class Permission {
       type: QueryTypes.UPDATE,
       replacements: [uploadinfo_path, permission_type, user_id],
     });
+    return result;
+  }
+
+  static async deletePermission(filepath: string) {
+   let sql = `DELETE from permissions where  uploadinfo_path="${filepath}"`;
+    const result = await sequelize.query(sql, { type: QueryTypes.DELETE});
     return result;
   }
 }

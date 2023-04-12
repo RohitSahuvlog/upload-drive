@@ -26,37 +26,24 @@ export const postFile = async (req: Request, res: Response) => {
      ]);
        return res.status(201).send({ message: "file uploaded successfully" });
   } catch (err) {
-    console.log(err)
     res.status(500).send({ error: "Error uploading file" });
   }
 };
 
 export const deleteFile = async (req: Request, res: Response) => {
-  let uploadReq = req as uploadRequest;
-  const { filepaths } = req.body;
+  let uploadReq = req as upload;
+  let filepath = uploadReq.params.id;
+  let routeFile = `./uploads/${filepath}`;
   try {
-    let sql1 = `DELETE from permissions where  uploadinfo_path="${filepaths}"`;
-
-    connection.query(sql1, async (err: Error, result: any) => {
-      if (err) {
-        console.log(err);
-      }
-    });
-
-    await fs.unlinkSync(`./uploads/${filepaths}`);
-
-    let sql = `DELETE from uploadinfo where  filepath="${filepaths}"`;
-
-    connection.query(sql, async (err: Error, result: any) => {
-      if (err) {
-        console.log(err);
-      }
-      return res.send({ message: "file  have deleted from database" });
-    });
-  } catch {
-    res.status(500).send({ error: "file donot present in database" });
+    await fs.unlinkSync(routeFile);
+    let deletePermission: any = await Permission.deletePermission(filepath);
+    let deleteFile: any = await File.deleteFile(filepath);
+    return res.send({ message: "file has been deleted" });
+  } catch (error) {
+    return res.status(500).send({ error: "file donot present in database" });
   }
 };
+
 export const replaceFile = async (req: Request, res: Response) => {
   let uploadReq = req as uploadRequest;
 
@@ -105,27 +92,6 @@ export const getDetails = async (req: Request, res: Response) => {
   }
 };
 
-
-
-export const deletePermissions = async (req: Request, res: Response) => {
-  try {
-    let sql1 = `DELETE from permissions where  uploadinfo_path="${req.params.id}"`;
-
-    connection.query(sql1, async (err: Error, result: any) => {
-      if (err) {
-        console.log(err);
-      }
-
-      if (result.length > 0) {
-        return res.send({ message: "Permisssion  have deleted from database" });
-      } else {
-        return res.send({ message: "Owner donot give to access this file" });
-      }
-    });
-  } catch {
-    res.status(500).send({ error: "file donot present in database" });
-  }
-};
 interface upload extends Request {
   filepaths?: any;
   user_id: Number;

@@ -60,3 +60,21 @@ export const updatePermission = async (req: Request, res: Response) => {
     return res.status(500).send({ error });
   }
 };
+
+export const deletePermissions = async (req: Request, res: Response) => {
+  let uploadReq = req as uploadRequest;
+  let filepath = uploadReq.params.id;
+  
+  try {
+    let deleteDetails: any = await Permission.deletePermission(filepath);
+    console.log(deleteDetails)
+      if (deleteDetails.length > 0) {
+        return res.send({ message: "Permisssion  have deleted from database" });
+      } else {
+        return res.send({ message: "Owner donot give to access this file" });
+      }
+
+  } catch {
+    res.status(500).send({ error: "file donot present in database" });
+  }
+};

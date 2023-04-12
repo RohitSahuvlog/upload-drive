@@ -1,5 +1,6 @@
 import { QueryTypes } from "sequelize";
 import { sequelize } from "../Config/sequilize.db";
+import { deleteFile } from "../Controller/fileController";
 
 export class File {
   static async getFileDetails(filepath: String) {
@@ -30,5 +31,9 @@ export class File {
     var result = await sequelize.query(sql, { type: QueryTypes.INSERT });
     return result;
   }
- 
+  static async deleteFile(filepath: string) {
+    let sql = `DELETE from uploadinfo where  filepath="${filepath}"`;
+    const result = await sequelize.query(sql, { type: QueryTypes.DELETE });
+    return result;
+  }
 }

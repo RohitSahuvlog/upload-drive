@@ -1,9 +1,8 @@
 import { Router } from "express";
 import {
-deletePermissions,
 specificPermissions,
 } from "../Controller/fileController";
-import { addPermisions, updatePermission } from "../Controller/permissionController";
+import { addPermisions, deletePermissions, updatePermission } from "../Controller/permissionController";
 import withWritePermission from "../Middleware/withWritePermission";
 
 const permissionRouter = Router();
@@ -13,11 +12,7 @@ permissionRouter.post(
   withWritePermission,
   specificPermissions
 );
-permissionRouter.delete(
-  "/delete/:id",
-  withWritePermission,
-  deletePermissions
-);
+
 permissionRouter.post(
   "/update/:id",
   withWritePermission,
