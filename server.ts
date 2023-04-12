@@ -6,6 +6,7 @@ import userRoutes from "./Router/userRoutes";
 import authentication from "./Middleware/authentication";
 import { checkupload } from "./Middleware/checkuploadmiddlewere";
 import "./Config/sequilize.db";
+import permissionRouter from "./Router/permissonRoute";
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -14,6 +15,7 @@ app.use(bodyParser.raw({ type: "application/vnd.custom-type" }));
 app.use("/user", userRoutes);
 app.use(authentication);
 app.use("/file", fileRouter);
+app.use("/permission", permissionRouter);
 app.use("/uploads", checkupload, express.static(path.resolve("uploads")));
 
 const port = 3000;
