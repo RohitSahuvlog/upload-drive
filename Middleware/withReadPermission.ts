@@ -20,8 +20,7 @@ const withReadPermission = async (
     );
     if (hasPermission) {
       return next();
-    }
-    else {
+    } else {
       return res.status(403).send({ error: "UnAuthorized" });
     }
   } catch {

@@ -25,9 +25,7 @@ const registerUser = async (req: Request, res: Response) => {
     var insertResponse: any = await User.insertUser(email, name, hashpassword);
 
     if (insertResponse) {
-      return res
-        .status(201)
-        .send({ message: "User registered successfully" });
+      return res.status(201).send({ message: "User registered successfully" });
     } else {
       return res
         .status(400)
@@ -58,9 +56,7 @@ const loginUser = async (req: Request, res: Response) => {
     var users = await bcrypt.compare(password, hash);
 
     if (!users) {
-      return res
-        .status(400)
-        .send({ error: "Incorrect password" });
+      return res.status(400).send({ error: "Incorrect password" });
     }
 
     var token = jwt.sign(
@@ -83,7 +79,7 @@ interface uploadRequest extends Request {
   userId?: any;
   files: Array<any>;
 }
- const getFile = async (req: Request, res: Response) => {
+const getFile = async (req: Request, res: Response) => {
   let uploadReq = req as uploadRequest;
 
   try {

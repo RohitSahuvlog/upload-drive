@@ -1,22 +1,17 @@
 import { NextFunction, Request, Response } from "express";
+import { UploadRequest } from "../Config/uploadRequest";
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
-interface MyUserRequest extends Request {
-  auth?: string;
-  userId?: string;
-}
 
-const authentication = (
-  req: MyUserRequest,
-  res: Response,
-  next: NextFunction
-) => {
-  if (!req.headers.authorization) {
+const authentication = (req: Request, res: Response, next: NextFunction) => {
+  const uploadReq = req as UploadRequest;
+
+  if (!uploadReq.headers.authorization) {
     return res.status(403).send({ message: "you are Unauthorize" });
   }
 
   try {
-    const user_token = req.headers.authorization.split(" ")[1];
+    const user_token = uploadReq.headers.authorization.split(" ")[1];
 
     jwt.verify(
       user_token,
@@ -25,8 +20,8 @@ const authentication = (
         if (err) {
           return res.status(403).send({ message: "you are Unauthorize" });
         }
-        req.auth = decoded.email;
-        req.userId = decoded.userId;
+        uploadReq.auth = decoded.email;
+        uploadReq.userId = decoded.userId;
 
         next();
       }

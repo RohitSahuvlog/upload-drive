@@ -7,6 +7,7 @@ export class User {
     var result = await sequelize.query(sql, { type: QueryTypes.INSERT });
     return result;
   }
+
   static async getUserByEmail(email: String) {
     var result = await sequelize.query(
       `SELECT * FROM user WHERE email ='${email}'`,

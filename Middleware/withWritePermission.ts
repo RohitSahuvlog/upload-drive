@@ -12,13 +12,11 @@ const withWritePermission = async (
   res: Response,
   next: NextFunction
 ) => {
-
   const ReqAuth = req as MyUserRequest;
   try {
     const hasPermission = await Permission.hasUserFileUpdateAccess(
       ReqAuth.userId,
       req.params.id
-
     );
     if (hasPermission) {
       return next();

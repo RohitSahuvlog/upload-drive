@@ -17,5 +17,3 @@ sequelize
     console.log(`Database & tables created!`);
   })
   .catch((err) => console.log(err));
-
-

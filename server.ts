@@ -4,9 +4,10 @@ import fileRouter from "./Router/fileRouter";
 import path from "path";
 import userRoutes from "./Router/userRoutes";
 import authentication from "./Middleware/authentication";
-import { checkupload } from "./Middleware/checkuploadmiddlewere";
 import "./Config/sequilize.db";
 import permissionRouter from "./Router/permissonRoute";
+import withReadPermission from "./Middleware/withReadPermission";
+require("dotenv").config();
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -16,10 +17,13 @@ app.use("/user", userRoutes);
 app.use(authentication);
 app.use("/file", fileRouter);
 app.use("/permission", permissionRouter);
-app.use("/uploads", checkupload, express.static(path.resolve("uploads")));
+app.use(
+  "/uploads",
+  withReadPermission,
+  express.static(path.resolve("uploads"))
+);
 
 const port = 3000;
-console.log("check");
 app.listen(port, function () {
   console.log("server started on port 3000");
 });

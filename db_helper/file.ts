@@ -1,6 +1,5 @@
 import { QueryTypes } from "sequelize";
 import { sequelize } from "../Config/sequilize.db";
-import { deleteFile } from "../Controller/fileController";
 
 export class File {
   static async getFileDetails(filepath: String) {
@@ -10,6 +9,7 @@ export class File {
     });
     return result;
   }
+
   static async ownerFile(userId: number) {
     let q1 = `SELECT  user.id,uploadinfo.id,filepath,create_at,update_at,size,owner_id,
   user_id,filename,name,email from user join uploadinfo  on user.id =uploadinfo.owner_id
@@ -21,6 +21,7 @@ export class File {
 
     return result;
   }
+
   static async addUpload(
     owner_id: number,
     filepath: String,
@@ -31,7 +32,7 @@ export class File {
     var result = await sequelize.query(sql, { type: QueryTypes.INSERT });
     return result;
   }
-  
+
   static async deleteFile(filepath: string) {
     let sql = `DELETE from uploadinfo where  filepath="${filepath}"`;
     const result = await sequelize.query(sql, { type: QueryTypes.DELETE });
