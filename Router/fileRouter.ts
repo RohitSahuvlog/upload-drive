@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import {
-  postFile,
+  uploadFile,
   deleteFile,
   replaceFile,
   getDetails
@@ -22,8 +22,8 @@ const fileFilter = (req: any, file: any, cb: any) => {
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 fileRouter.get("/details/:id",withReadPermission, getDetails);
-fileRouter.post("/upload", upload.array("file", 5), postFile);
 fileRouter.post("/delete/:id",withWritePermission, deleteFile);
+fileRouter.post("/upload", upload.array("file", 5), uploadFile);
 fileRouter.post(
   "/update/:id",
   uploadauthentication,

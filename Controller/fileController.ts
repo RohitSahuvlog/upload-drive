@@ -10,7 +10,7 @@ interface uploadRequest extends Request {
   id: Number;
 }
 
-export const postFile = async (req: Request, res: Response) => {
+export const uploadFile = async (req: Request, res: Response) => {
   
     const uploadReq = req as uploadRequest;
     const userId = uploadReq.userId;
