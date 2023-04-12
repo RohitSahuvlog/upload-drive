@@ -20,7 +20,7 @@ export class File {
 
     return result;
   }
-  static async uploadFile(
+  static async addUpload(
     owner_id: number,
     filepath: String,
     filename: String,
@@ -30,13 +30,5 @@ export class File {
     var result = await sequelize.query(sql, { type: QueryTypes.INSERT });
     return result;
   }
-  static async uploadFilePermission(
-    uploadinfo_path: String,
-    user_id: number,
-    permission_type: number
-  ) {
-    let sql = `INSERT INTO permissions  (uploadinfo_path,user_id, permission_type) VALUES ("${uploadinfo_path}",${user_id}, ${permission_type}) `;
-    var result = await sequelize.query(sql, { type: QueryTypes.INSERT });
-    return result;
-  }
+ 
 }

@@ -2,6 +2,7 @@ import express, { Response, Request } from "express";
 import fs from "fs";
 import connection from "../Config/db";
 import { File } from "../db_helper/file";
+import { Permission } from "../db_helper/permission";
 import { User } from "../db_helper/user";
 interface uploadRequest extends Request {
   userId?: any;
@@ -16,13 +17,12 @@ export const postFile = async (req: Request, res: Response) => {
     const originalName = uploadReq.files[0]["originalname"];
     const filePath = `./uploads/${fileName}`;
   try {
-     
-
-    const fileStats = fs.statSync(filePath);
+     const fileStats = fs.statSync(filePath);
      const size = fileStats.size;
-     const [upload, uploadPermision] = await Promise.all([
-     File.uploadFile(userId, fileName, originalName, size),
-     File.uploadFilePermission(fileName, userId, 2)]);
+     const [addUpload, addUploadPermision] = await Promise.all([
+       File.addUpload(userId, fileName, originalName, size),
+       Permission.addUploadPermision(fileName, userId, 2),
+     ]);
        return res.status(201).send({ message: "file uploads by owner" });
   } catch (err) {
     console.log(err)
