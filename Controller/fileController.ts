@@ -7,6 +7,7 @@ import { User } from "../db_helper/user";
 interface uploadRequest extends Request {
   userId?: any;
   files: Array<any>;
+  id: Number;
 }
 
 export const postFile = async (req: Request, res: Response) => {
@@ -91,47 +92,29 @@ export const replaceFile = async (req: Request, res: Response) => {
   }
 };
 
-interface uploadRequest1 extends Request {
-  userId?: any;
-  files: Array<any>;
-}
-
-export const permissionsFunc = (req: Request, res: Response) => {
-  let uploadReq = req as uploadRequest1;
+export const addPermisions = async (req: Request, res: Response) => {
+  const uploadReq = req as uploadRequest;
   const { permissiontype, email } = req.body;
+  const filepath = uploadReq.params.id;
 
   try {
-    connection.query(
-      "SELECT * FROM user WHERE email =?",
-      [email],
-      async (err: Error, result: any) => {
-        if (err) throw err;
-        let accessuserid;
-        if (result.length > 0) {
-          accessuserid = result[0].id;
-        }
-
-        let sql2 = "INSERT INTO permissions SET  ?";
-        connection.query(
-          sql2,
-          {
-            user_id: accessuserid,
-            uploadinfo_path: uploadReq.params.id,
-            permission_type: permissiontype,
-          },
-          (err: Error, result: any) => {
-            if (err) {
-              console.log(err);
-            }
-            return res
-              .status(201)
-              .send({ message: "you have an access of this file" });
-          }
-        );
-      }
+    if (!permissiontype || !email) {
+      res.status(400);
+      throw new Error("Please Enter all the Feilds");
+    }
+    const userDetails: any = await User.getUserByEmail(email);
+    if (!userDetails || !userDetails.length) {
+      return res.status(404).send({ error: "User not found" });
+    }
+    const userid = userDetails[0].id;
+    const addpermission = await Permission.addPermision(
+      filepath,
+      userid,
+      permissiontype
     );
+    return res.status(201).send({ message: "you have an access of this file" });
   } catch (error) {
-    res.status(500).send({ error });
+    return res.status(500).send({ error });
   }
 };
 
