@@ -1,10 +1,8 @@
 import { Request, Response } from "express";
-import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { User } from "../db_helper/user";
 import { File } from "../db_helper/file";
-dotenv.config();
 
 const registerUser = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;

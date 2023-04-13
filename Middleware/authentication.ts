@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { UploadRequest } from "../Config/uploadRequest";
-require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
 const authentication = (req: Request, res: Response, next: NextFunction) => {

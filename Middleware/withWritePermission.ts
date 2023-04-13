@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { Permission } from "../db_helper/permission";
-require("dotenv").config();
 
 interface MyUserRequest extends Request {
   auth: string;
