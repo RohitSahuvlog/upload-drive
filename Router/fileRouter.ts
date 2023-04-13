@@ -5,9 +5,11 @@ import {
   deleteFile,
   updateUploadFile,
   getFileDetails,
+  updateOwnership,
 } from "../Controller/fileController";
 
 import storage from "../Middleware/fileconfig";
+import withOwnerPermission from "../Middleware/withOwnerPermission";
 import withReadPermission from "../Middleware/withReadPermission";
 import withWritePermission from "../Middleware/withWritePermission";
 
@@ -22,5 +24,5 @@ fileRouter.post(
   upload.array("file", 5),
   updateUploadFile
 );
-
+fileRouter.post("/transferowner/:id", withOwnerPermission, updateOwnership);
 export default fileRouter;

@@ -19,10 +19,10 @@ export const uploadFile = async (req: Request, res: Response) => {
     if (total > 10240) {
       return res.status(400).send({ message: "size limit exceed" });
     }
-      const [addUpload, addPermision] = await Promise.all([
-        File.addUpload(userId, fileName, originalName, size),
-        Permission.addPermision(fileName, userId, 2),
-      ]);
+    const [addUpload, addPermision] = await Promise.all([
+      File.addUpload(userId, fileName, originalName, size),
+      Permission.addPermision(fileName, userId, 2),
+    ]);
     return res.status(201).send({ message: "file uploaded successfully" });
   } catch (err) {
     res.status(500).send({ error: "Error uploading file" });

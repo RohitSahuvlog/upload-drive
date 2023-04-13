@@ -54,7 +54,7 @@ export const updatePermission = async (req: Request, res: Response) => {
     }
 
     const userid = userDetails[0].id;
-    const hasOwner = await File.hasOwnerFile(userid, filepath);
+    const hasOwner = await Permission.hasOwnerFileAccess(userid, filepath);
     if (hasOwner) {
       return res.send({ message: "You arenot owner of file" });
     }
@@ -102,7 +102,7 @@ export const removePermissions = async (req: Request, res: Response) => {
       return res.status(404).send({ error: "User not found" });
     }
     const userid = userDetails[0].id;
-    const hasOwner = await File.hasOwnerFile(userid, filepath);
+    const hasOwner = await Permission.hasOwnerFileAccess(userid, filepath);
     if (hasOwner) {
       return res.send({ message: "You arenot owner of file" });
     }

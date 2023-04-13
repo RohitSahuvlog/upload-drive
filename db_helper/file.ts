@@ -51,13 +51,5 @@ export class File {
     return result;
   }
 
-  static async hasOwnerFile(userId: Number, filepath: String) {
-    let sql = `SELECT * from uploadinfo where  filepath="${filepath}" AND owner_id=${userId}`;
-    const result = await sequelize.query(sql, { type: QueryTypes.SELECT });
-    if (result.length !== 0) {
-      return true;
-    } else {
-      return false;
-    }
   }
 }
