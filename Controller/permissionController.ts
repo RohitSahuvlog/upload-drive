@@ -1,5 +1,6 @@
 import { Response, Request } from "express";
 import { UploadRequest } from "../Config/uploadRequest";
+import { File } from "../db_helper/file";
 import { Permission } from "../db_helper/permission";
 import { User } from "../db_helper/user";
 
@@ -12,11 +13,11 @@ export const addPermisions = async (req: Request, res: Response) => {
     if (!filepath || !permissionType || !email) {
       return res.status(400).send({ message: "Please Enter all the Feilds" });
     }
-     if (permissionType != 1 && permissionType != 2) {
-       return res
-         .status(400)
-         .send({ message: "Please Enter valid permission type" });
-     }
+    if (permissionType != 1 && permissionType != 2) {
+      return res
+        .status(400)
+        .send({ message: "Please Enter valid permission type" });
+    }
     const userDetails: any = await User.getUserByEmail(email);
     if (!userDetails || !userDetails.length) {
       return res.status(404).send({ error: "User not found" });
@@ -53,6 +54,10 @@ export const updatePermission = async (req: Request, res: Response) => {
     }
 
     const userid = userDetails[0].id;
+    const hasOwner = await File.hasOwnerFile(userid, filepath);
+    if (hasOwner) {
+      return res.send({ message: "You arenot owner of file" });
+    }
     let addpermission: any = await Permission.updatePermission(
       filepath,
       userid,
@@ -97,7 +102,10 @@ export const removePermissions = async (req: Request, res: Response) => {
       return res.status(404).send({ error: "User not found" });
     }
     const userid = userDetails[0].id;
-
+    const hasOwner = await File.hasOwnerFile(userid, filepath);
+    if (hasOwner) {
+      return res.send({ message: "You arenot owner of file" });
+    }
     let deletePermission: any = await Permission.deleteSpecificPermission(
       userid,
       filepath
