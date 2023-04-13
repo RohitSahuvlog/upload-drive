@@ -79,7 +79,7 @@ interface uploadRequest extends Request {
   userId?: any;
   files: Array<any>;
 }
-const getFile = async (req: Request, res: Response) => {
+const getMyFiles = async (req: Request, res: Response) => {
   let uploadReq = req as uploadRequest;
 
   try {
@@ -99,4 +99,4 @@ const getFile = async (req: Request, res: Response) => {
   }
 };
 
-export { registerUser, loginUser, getFile };
+export { registerUser, loginUser, getMyFiles };
