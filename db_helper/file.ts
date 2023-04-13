@@ -44,4 +44,10 @@ export class File {
     const result = await sequelize.query(sql, { type: QueryTypes.DELETE });
     return result;
   }
+
+  static async fileSize(userId:Number) {
+    let sql = `SELECT SUM(size) AS totalsize FROM uploadinfo where owner_id=${userId}`;
+    const result = await sequelize.query(sql, { type: QueryTypes.SELECT });
+    return result;
+  }
 }
