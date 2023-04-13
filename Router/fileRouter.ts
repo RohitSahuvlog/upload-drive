@@ -12,11 +12,8 @@ import withReadPermission from "../Middleware/withReadPermission";
 import withWritePermission from "../Middleware/withWritePermission";
 
 const fileRouter = Router();
-const fileFilter = (req: any, file: any, cb: any) => {
-  cb(null, true);
-};
 
-const upload = multer({ storage: storage, fileFilter: fileFilter });
+const upload = multer({ storage: storage });
 
 fileRouter.get("/details/:id", withReadPermission, getFileDetails);
 fileRouter.post("/upload", upload.array("file", 5), uploadFile);
