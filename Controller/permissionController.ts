@@ -12,6 +12,11 @@ export const addPermisions = async (req: Request, res: Response) => {
     if (!filepath || !permissionType || !email) {
       return res.status(400).send({ message: "Please Enter all the Feilds" });
     }
+     if (permissionType != 1 && permissionType != 2) {
+       return res
+         .status(400)
+         .send({ message: "Please Enter valid permission type" });
+     }
     const userDetails: any = await User.getUserByEmail(email);
     if (!userDetails || !userDetails.length) {
       return res.status(404).send({ error: "User not found" });
