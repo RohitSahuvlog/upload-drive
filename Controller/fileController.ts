@@ -4,8 +4,7 @@ import { UploadRequest } from "../Config/uploadRequest";
 import { File } from "../db_helper/file";
 import { Permission } from "../db_helper/permission";
 import { User } from "../db_helper/user";
-import dotenv from "dotenv";
-dotenv.config();
+
 export const uploadFile = async (req: Request, res: Response) => {
   const uploadReq = req as UploadRequest;
   const userId = uploadReq.userId;
@@ -18,7 +17,7 @@ export const uploadFile = async (req: Request, res: Response) => {
     const totalsize: any = await File.fileSize(userId);
     const total = Number(totalsize[0].totalsize) + Number(size);
     const value: any = process.env.DB_FILESIZE;
-    if (total > value) {
+    if (total > Number(process.env.FILESIZE)) {
       return res.status(400).send({ message: "size limit exceed" });
     }
     const [addUpload, addPermision] = await Promise.all([
@@ -85,27 +84,30 @@ export const updateOwnership = async (req: Request, res: Response) => {
   const filepath = uploadRequest.params.id;
   const date = Date.now();
   const { user_email } = uploadRequest.body;
-
   try {
     const userDetails: any = await User.getUserByEmail(user_email);
     if (!userDetails || !userDetails.length) {
       return res.status(404).send({ error: "User not found" });
     }
-
-    const fileStats = fs.statSync(filepath);
+    const userid = userDetails[0].id;
+    const fileStats = fs.statSync(`./uploads/${filepath}`);
     const size = fileStats.size;
-    const totalsize: any = await File.fileSize(uploadRequest.userId);
+    const totalsize: any = await File.fileSize(userid);
     const total = Number(totalsize[0].totalsize) + Number(size);
-    const value: any = process.env.DB_FILESIZE;
-    if (total > value) {
+    if (total > Number(process.env.FILESIZE)) {
       return res.status(400).send({ message: "size limit exceed" });
     }
-    const userid = userDetails[0].id;
-    const updateFile = await File.updateOwner(userid, filepath, date);
-    console.log(updateFile);
+
+    let updateFile:any = await File.updateOwner(userid, filepath, date);
+    if (updateFile[1] === 0) {
+      return res
+        .status(400)
+        .send({ message: "Ownership have not transfered " });
+    }
 
     return res.status(200).send({ message: "Ownership transfer successfully" });
-  } catch {
+  } catch (error) {
+    console.log(error)
     res.status(500).send({ error: "file donot present in database" });
   }
 };
