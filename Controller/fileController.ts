@@ -59,7 +59,7 @@ export const updateUploadFile = async (req: Request, res: Response) => {
   }
 };
 
-export const getDetails = async (req: Request, res: Response) => {
+export const getFileDetails = async (req: Request, res: Response) => {
   let uploadReq = req as UploadRequest;
   let filepath = uploadReq.params.id;
 
