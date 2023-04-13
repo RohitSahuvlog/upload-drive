@@ -5,11 +5,11 @@ import { User } from "../db_helper/user";
 
 export const addPermisions = async (req: Request, res: Response) => {
   const uploadReq = req as UploadRequest;
-  const { permissiontype, email } = req.body;
+  const { permissionType, email } = req.body;
   const filepath = uploadReq.params.id;
 
   try {
-    if (!filepath || !permissiontype || !email) {
+    if (!filepath || !permissionType || !email) {
       return res.status(400).send({ message: "Please Enter all the Feilds" });
     }
     const userDetails: any = await User.getUserByEmail(email);
@@ -20,7 +20,7 @@ export const addPermisions = async (req: Request, res: Response) => {
     const addpermission = await Permission.addPermision(
       filepath,
       userid,
-      permissiontype
+      permissionType
     );
     return res.status(201).send({ message: "you have an access of this file" });
   } catch (error) {
@@ -30,13 +30,13 @@ export const addPermisions = async (req: Request, res: Response) => {
 
 export const updatePermission = async (req: Request, res: Response) => {
   let uploadReq = req as UploadRequest;
-  const { permissiontype, email } = req.body;
+  const { permissionType, email } = req.body;
   let filepath = uploadReq.params.id;
   try {
-    if (!filepath || !permissiontype || !email) {
+    if (!filepath || !permissionType || !email) {
       return res.status(400).send({ message: "Please Enter all the Feilds" });
     }
-    if (permissiontype != 1 && permissiontype != 2) {
+    if (permissionType != 1 && permissionType != 2) {
       return res
         .status(400)
         .send({ message: "Please Enter valid permission type" });
@@ -51,7 +51,7 @@ export const updatePermission = async (req: Request, res: Response) => {
     let addpermission: any = await Permission.updatePermission(
       filepath,
       userid,
-      permissiontype
+      permissionType
     );
 
     if (addpermission[1] === 0) {
