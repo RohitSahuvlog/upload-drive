@@ -40,38 +40,24 @@ export const deleteFile = async (req: Request, res: Response) => {
   }
 };
 
-// export const replaceFile = async (req: Request, res: Response) => {
-//   let uploadReq = req as UploadRequest;
+export const updateUploadFile = async (req: Request, res: Response) => {
+  let uploadRequest = req as UploadRequest;
+  const uploadFilename = `./uploads/${uploadRequest.files[0]["filename"]}`;
+  const replaceFilename = `./uploads/${req.params.id}`;
+  const filepath = uploadRequest.params.id;
+  const date = Date.now();
 
-//   try {
-//     fs.rename(
-//       "./uploads/" + uploadReq.files[0]["filename"],
-//       "./uploads/" + req.params.id,
-//       (err: any) => {
-//         if (err) throw err;
-//       }
-//     );
-//     const formatedTimestamp = () => {
-//       const d = new Date();
-//       const date = d.toISOString().split("T")[0];
-//       const time = d.toTimeString().split(" ")[0];
-//       return `${date} ${time}`;
-//     };
-//     var date = await formatedTimestamp();
-//     let sql = `UPDATE uploadinfo SET update_at="${date}" WHERE filepath="${uploadReq.params.id}"`;
-//     await connection.query(sql, (err: Error, result: any) => {
-//       if (err) {
-//         console.log(err);
-//         return res
-//           .status(500)
-//           .send({ error: "file donot present in database" });
-//       }
-//       return res.status(201).send({ message: "file uploaded successfully" });
-//     });
-//   } catch {
-//     res.status(500).send({ error: "file donot present in database" });
-//   }
-// };
+  try {
+    await fs.renameSync(uploadFilename, replaceFilename);
+
+    const updateFile = await File.updateFile(filepath, date);
+    console.log(updateFile);
+
+    return res.status(201).send({ message: "file uploaded successfully" });
+  } catch {
+    res.status(500).send({ error: "file donot present in database" });
+  }
+};
 
 export const getDetails = async (req: Request, res: Response) => {
   let uploadReq = req as UploadRequest;

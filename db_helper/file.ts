@@ -38,4 +38,10 @@ export class File {
     const result = await sequelize.query(sql, { type: QueryTypes.DELETE });
     return result;
   }
+
+  static async updateFile(filepath: string, date: Number) {
+    let sql = `UPDATE uploadinfo SET update_at="${date}" WHERE filepath="${filepath}"`;
+    const result = await sequelize.query(sql, { type: QueryTypes.DELETE });
+    return result;
+  }
 }
