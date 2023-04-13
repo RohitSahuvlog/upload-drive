@@ -51,5 +51,12 @@ export class File {
     return result;
   }
 
+  static async updateOwner(userid:Number,filepath: string, date: Number) {
+    let sql = `UPDATE uploadinfo SET update_at=?,owner_id=? WHERE filepath="${filepath}"`;
+    const result = await sequelize.query(sql, {
+      type: QueryTypes.UPDATE,
+      replacements: [date, userid],
+    });
+    return result;
   }
 }

@@ -77,3 +77,24 @@ export const getFileDetails = async (req: Request, res: Response) => {
     res.status(500).send({ error: "file donot present in database" });
   }
 };
+
+export const updateOwnership = async (req: Request, res: Response) => {
+  let uploadRequest = req as UploadRequest;
+  const filepath = uploadRequest.params.id;
+  const date = Date.now();
+  const { user_email } = uploadRequest.body;
+
+  try {
+    const userDetails: any = await User.getUserByEmail(user_email);
+    if (!userDetails || !userDetails.length) {
+      return res.status(404).send({ error: "User not found" });
+    }
+    const userid = userDetails[0].id;
+    const updateFile = await File.updateOwner(userid, filepath, date);
+    console.log(updateFile);
+
+    return res.status(200).send({ message: "Ownership transfer successfully" });
+  } catch {
+    res.status(500).send({ error: "file donot present in database" });
+  }
+};
