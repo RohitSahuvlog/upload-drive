@@ -4,7 +4,8 @@ import { UploadRequest } from "../Config/uploadRequest";
 import { File } from "../db_helper/file";
 import { Permission } from "../db_helper/permission";
 import { User } from "../db_helper/user";
-
+import dotenv from "dotenv";
+dotenv.config();
 export const uploadFile = async (req: Request, res: Response) => {
   const uploadReq = req as UploadRequest;
   const userId = uploadReq.userId;
@@ -16,7 +17,8 @@ export const uploadFile = async (req: Request, res: Response) => {
     const size = fileStats.size;
     const totalsize: any = await File.fileSize(userId);
     const total = Number(totalsize[0].totalsize) + Number(size);
-    if (total > 10240) {
+    const value: any = process.env.DB_FILESIZE;
+    if (total > value) {
       return res.status(400).send({ message: "size limit exceed" });
     }
     const [addUpload, addPermision] = await Promise.all([
@@ -88,6 +90,15 @@ export const updateOwnership = async (req: Request, res: Response) => {
     const userDetails: any = await User.getUserByEmail(user_email);
     if (!userDetails || !userDetails.length) {
       return res.status(404).send({ error: "User not found" });
+    }
+
+    const fileStats = fs.statSync(filepath);
+    const size = fileStats.size;
+    const totalsize: any = await File.fileSize(uploadRequest.userId);
+    const total = Number(totalsize[0].totalsize) + Number(size);
+    const value: any = process.env.DB_FILESIZE;
+    if (total > value) {
+      return res.status(400).send({ message: "size limit exceed" });
     }
     const userid = userDetails[0].id;
     const updateFile = await File.updateOwner(userid, filepath, date);
