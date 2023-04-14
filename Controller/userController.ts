@@ -83,15 +83,18 @@ const getMyFiles = async (req: Request, res: Response) => {
   try {
     const ownerFile: Array<any> = await File.ownerFile(uploadReq.userId);
     for (var i = 0; i < ownerFile.length; i++) {
-      ownerFile[i] = {
-        ...ownerFile[i],
-        ownername: ownerFile[i].name,
-        owneremail: ownerFile[i].email,
-      };
+      (ownerFile[i].ownername = ownerFile[i].name);
+      (ownerFile[i].owneremail = ownerFile[i].email);
       delete ownerFile[i].name;
       delete ownerFile[i].email;
     }
-    return res.status(200).send({ ownerFile });
+    const totalsize: any = await File.fileSize(uploadReq.userId);
+
+    return res.status(200).send({
+      usedSize: Number(totalsize[0].totalsize),
+      totalSize: Number(process.env.FILESIZE),
+      ownerFile,
+    });
   } catch {
     res.status(500).send({ error: "file donot present in database" });
   }

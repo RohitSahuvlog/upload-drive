@@ -16,7 +16,6 @@ export const uploadFile = async (req: Request, res: Response) => {
     const size = fileStats.size;
     const totalsize: any = await File.fileSize(userId);
     const total = Number(totalsize[0].totalsize) + Number(size);
-    const value: any = process.env.DB_FILESIZE;
     if (total > Number(process.env.FILESIZE)) {
       return res.status(400).send({ message: "size limit exceed" });
     }
