@@ -8,7 +8,10 @@ export const addPermisions = async (req: Request, res: Response) => {
   const uploadReq = req as UploadRequest;
   const { permissionType, email } = req.body;
   const filepath = uploadReq.params.id;
-
+  let ip: any =
+    (uploadReq.headers["x-forwarded-for"] as string)?.split(",")[1] ||
+    uploadReq.connection.remoteAddress;
+  let useragent = uploadReq.headers["user-agent"] as string;
   try {
     if (!filepath || !permissionType || !email) {
       return res.status(400).send({ message: "Please Enter all the Feilds" });
@@ -20,6 +23,14 @@ export const addPermisions = async (req: Request, res: Response) => {
     }
     const userDetails: any = await User.getUserByEmail(email);
     if (!userDetails || !userDetails.length) {
+      let activity = await Permission.addActivity(
+        "ADD",
+        0,
+        ip.split(":")[3],
+        useragent,
+        filepath,
+        "User not found"
+      );
       return res.status(404).send({ message: "User not found" });
     }
     const userid = userDetails[0].id;
@@ -27,6 +38,15 @@ export const addPermisions = async (req: Request, res: Response) => {
       filepath,
       userid,
       permissionType
+    );
+
+    let activity = await Permission.addActivity(
+      "ADD",
+      userid,
+      ip.split(":")[3],
+      useragent,
+      filepath,
+      "Success"
     );
     return res.status(201).send({ message: "you have an access of this file" });
   } catch (error) {
@@ -73,7 +93,6 @@ export const updatePermission = async (req: Request, res: Response) => {
     return res.status(500).send({ error });
   }
 };
-
 
 export const removePermissions = async (req: Request, res: Response) => {
   let uploadReq = req as UploadRequest;
