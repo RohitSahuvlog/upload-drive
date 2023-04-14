@@ -25,7 +25,7 @@ export const uploadFile = async (req: Request, res: Response) => {
     ]);
     return res.status(201).send({ message: "file uploaded successfully" });
   } catch (err) {
-    res.status(500).send({ error: "Error uploading file" });
+    res.status(500).send({ message: "Error uploading file" });
   }
 };
 
@@ -41,7 +41,7 @@ export const deleteFile = async (req: Request, res: Response) => {
 
     return res.send({ message: "file has been deleted" });
   } catch (error) {
-    return res.status(500).send({ error: "file donot present in database" });
+    return res.status(500).send({ message: "file donot present in database" });
   }
 };
 
@@ -60,7 +60,7 @@ export const updateUploadFile = async (req: Request, res: Response) => {
 
     return res.status(201).send({ message: "file uploaded successfully" });
   } catch {
-    res.status(500).send({ error: "file donot present in database" });
+    res.status(500).send({ message: "file donot present in database" });
   }
 };
 
@@ -74,7 +74,7 @@ export const getFileDetails = async (req: Request, res: Response) => {
     var array = { ...result[0], accessUser };
     return res.status(200).send(array);
   } catch (err) {
-    res.status(500).send({ error: "file donot present in database" });
+    res.status(500).send({ message: "file donot present in database" });
   }
 };
 
@@ -86,7 +86,7 @@ export const updateOwnership = async (req: Request, res: Response) => {
   try {
     const userDetails: any = await User.getUserByEmail(user_email);
     if (!userDetails || !userDetails.length) {
-      return res.status(404).send({ error: "User not found" });
+      return res.status(404).send({ message: "User not found" });
     }
     const userid = userDetails[0].id;
     const fileStats = fs.statSync(`./uploads/${filepath}`);
@@ -106,7 +106,6 @@ export const updateOwnership = async (req: Request, res: Response) => {
 
     return res.status(200).send({ message: "Ownership transfer successfully" });
   } catch (error) {
-    console.log(error)
-    res.status(500).send({ error: "file donot present in database" });
+    res.status(500).send({ message: "file donot present in database" });
   }
 };

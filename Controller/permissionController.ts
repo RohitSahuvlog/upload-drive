@@ -20,7 +20,7 @@ export const addPermisions = async (req: Request, res: Response) => {
     }
     const userDetails: any = await User.getUserByEmail(email);
     if (!userDetails || !userDetails.length) {
-      return res.status(404).send({ error: "User not found" });
+      return res.status(404).send({ message: "User not found" });
     }
     const userid = userDetails[0].id;
     const addpermission = await Permission.addPermision(
@@ -50,7 +50,7 @@ export const updatePermission = async (req: Request, res: Response) => {
 
     let userDetails: any = await User.getUserByEmail(email);
     if (!userDetails || !userDetails.length) {
-      return res.status(404).send({ error: "User not found" });
+      return res.status(404).send({ message: "User not found" });
     }
 
     const userid = userDetails[0].id;
@@ -65,7 +65,7 @@ export const updatePermission = async (req: Request, res: Response) => {
     );
 
     if (addpermission[1] === 0) {
-      return res.status(404).send({ error: "User have not authorized" });
+      return res.status(404).send({ message: "User have not authorized" });
     }
 
     return res.send({ message: "permission has been updated successfully" });
@@ -83,7 +83,7 @@ export const removePermissions = async (req: Request, res: Response) => {
   try {
     const userDetails: any = await User.getUserByEmail(user_email);
     if (!userDetails || !userDetails.length) {
-      return res.status(404).send({ error: "User not found" });
+      return res.status(404).send({ message: "User not found" });
     }
     const userid = userDetails[0].id;
     const hasOwner = await Permission.hasOwnerFileAccess(userid, filepath);
@@ -97,6 +97,6 @@ export const removePermissions = async (req: Request, res: Response) => {
 
     return res.send({ message: "Permission removed from given user" });
   } catch {
-    res.status(500).send({ error: "file donot present in database" });
+    res.status(500).send({ message: "file donot present in database" });
   }
 };

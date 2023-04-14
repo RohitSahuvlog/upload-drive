@@ -20,10 +20,10 @@ const withReadPermission = async (
     if (hasPermission) {
       return next();
     } else {
-      return res.status(403).send({ error: "UnAuthorized" });
+      return res.status(403).send({ message: "UnAuthorized" });
     }
   } catch {
-    res.status(500).send({ error: "err in withReadpermission" });
+    res.status(500).send({ message: "err in withReadpermission" });
   }
 };
 

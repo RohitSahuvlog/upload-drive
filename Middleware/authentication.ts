@@ -26,7 +26,7 @@ const authentication = (req: Request, res: Response, next: NextFunction) => {
       }
     );
   } catch {
-    res.status(500).send({ error: "error found  in authentication" });
+    res.status(500).send({ message: "error found  in authentication" });
   }
 };
 

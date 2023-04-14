@@ -30,7 +30,7 @@ const registerUser = async (req: Request, res: Response) => {
         .send({ message: "User registration failed please try again later" });
     }
   } catch (error) {
-    res.status(500).send({ error: "internal server error" });
+    res.status(500).send({ message: "internal server error" });
   }
 };
 
@@ -42,19 +42,19 @@ const loginUser = async (req: Request, res: Response) => {
     if (!email && !password) {
       return res
         .status(400)
-        .send({ error: "Please Enter Email Address and Password Details" });
+        .send({ message: "Please Enter Email Address and Password Details" });
     }
 
     var userDetails: any = await User.getUserByEmail(email);
     if (userDetails.length == 0) {
-      return res.status(400).send({ error: "User not found" });
+      return res.status(400).send({ message: "User not found" });
     }
 
     var hash = userDetails[0].password;
     var users = await bcrypt.compare(password, hash);
 
     if (!users) {
-      return res.status(400).send({ error: "Incorrect password" });
+      return res.status(400).send({ message: "Incorrect password" });
     }
 
     var token = jwt.sign(
@@ -69,7 +69,7 @@ const loginUser = async (req: Request, res: Response) => {
       token,
     });
   } catch (error) {
-    res.status(500).send({ error: "internal server error" });
+    res.status(500).send({ message: "internal server error" });
   }
 };
 
@@ -96,7 +96,7 @@ const getMyFiles = async (req: Request, res: Response) => {
       ownerFile,
     });
   } catch {
-    res.status(500).send({ error: "file donot present in database" });
+    res.status(500).send({ message: "file donot present in database" });
   }
 };
 
