@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { User } from "../db_helper/user";
 import { File } from "../db_helper/file";
+import { Activities } from "../db_helper/activityFile";
 
 const registerUser = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
@@ -99,5 +100,16 @@ const getMyFiles = async (req: Request, res: Response) => {
     res.status(500).send({ message: "file donot present in database" });
   }
 };
+const getActivity = async (req: Request, res: Response) => {
 
-export { registerUser, loginUser, getMyFiles };
+  try {
+    const ownerFile: Array<any> = await Activities.getActivity();
+    
+
+    return res.status(200).send({ ownerFile });
+  } catch {
+    res.status(500).send({ message: "file donot present in database" });
+  }
+};
+
+export { registerUser, loginUser, getMyFiles, getActivity };
