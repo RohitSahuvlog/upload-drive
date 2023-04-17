@@ -82,9 +82,9 @@ export const updateOwnership = async (req: Request, res: Response) => {
   let uploadRequest = req as UploadRequest;
   const filepath = uploadRequest.params.id;
   const date = Date.now();
-  const { user_email } = uploadRequest.body;
+  const { email } = uploadRequest.body;
   try {
-    const userDetails: any = await User.getUserByEmail(user_email);
+    const userDetails: any = await User.getUserByEmail(email);
     if (!userDetails || !userDetails.length) {
       return res.status(404).send({ message: "User not found" });
     }

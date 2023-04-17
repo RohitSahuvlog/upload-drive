@@ -82,14 +82,14 @@ export const updatePermission = async (req: Request, res: Response) => {
 
 export const removePermissions = async (req: Request, res: Response) => {
   let uploadReq = req as UploadRequest;
-  const { user_email } = uploadReq.body;
+  const { email } = uploadReq.body;
   let filepath = uploadReq.params.id;
   let ip: any =
     (uploadReq.headers["x-forwarded-for"] as string)?.split(",")[1] ||
     uploadReq.connection.remoteAddress;
   let useragent = uploadReq.headers["user-agent"] as string;
   try {
-    const userDetails: any = await User.getUserByEmail(user_email);
+    const userDetails: any = await User.getUserByEmail(email);
     if (!userDetails || !userDetails.length) {
       return res.status(404).send({ message: "User not found" });
     }

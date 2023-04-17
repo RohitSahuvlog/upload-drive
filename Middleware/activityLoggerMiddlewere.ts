@@ -8,7 +8,7 @@ export const activityLoggerMiddleware = async (
   next: NextFunction
 ) => {
   const uploadReq = req as UploadRequest;
-  const { email,user_email } = uploadReq.body;
+  const { email } = uploadReq.body;
   let ip: any =
     (uploadReq.headers["x-forwarded-for"] as string)?.split(",")[1] ||
     uploadReq.connection.remoteAddress;
@@ -27,7 +27,7 @@ export const activityLoggerMiddleware = async (
       useragent,
       filepath,
       urlDetails.status,
-      email || user_email
+      email 
     );
     next();
   } catch (error) {
@@ -38,7 +38,7 @@ export const activityLoggerMiddleware = async (
       useragent,
       filepath,
       `Error: ${error}`,
-      email || user_email
+      email
     );
 
     return next(error);
