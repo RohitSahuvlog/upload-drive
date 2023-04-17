@@ -7,6 +7,7 @@ import authentication from "./Middleware/authentication";
 import "./Config/sequilize.db";
 import permissionRouter from "./Router/permissonRoute";
 import withReadPermission from "./Middleware/withReadPermission";
+import { activityLoggerMiddleware } from "./Middleware/activityLoggerMiddlewere";
 require("dotenv").config();
 const app = express();
 app.use(express.json());
@@ -16,7 +17,7 @@ app.use(bodyParser.raw({ type: "application/vnd.custom-type" }));
 app.use("/user", userRoutes);
 app.use(authentication);
 app.use("/file", fileRouter);
-app.use("/permission", permissionRouter);
+app.use("/permission",activityLoggerMiddleware, permissionRouter);
 app.use(
   "/uploads",
   withReadPermission,
