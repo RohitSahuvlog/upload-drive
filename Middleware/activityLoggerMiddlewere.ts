@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { UploadRequest } from "../Config/uploadRequest";
-import { User } from "../db_helper/user";
+import { Activities } from "../db_helper/activityFile";
 
 export const activityLoggerMiddleware = async (
   req: Request,
@@ -8,32 +8,31 @@ export const activityLoggerMiddleware = async (
   next: NextFunction
 ) => {
   const uploadReq = req as UploadRequest;
-
   let ip: any =
     (uploadReq.headers["x-forwarded-for"] as string)?.split(",")[1] ||
     uploadReq.connection.remoteAddress;
   let useragent = uploadReq.headers["user-agent"] as string;
   let stringCutted = req.originalUrl.split("/");
-  var t1 = [stringCutted.at(1), stringCutted.at(2)].join("/");
+  var urlPath = [stringCutted.at(1), stringCutted.at(2)].join("/");
   var filepath = req.originalUrl.substring(
     req.originalUrl.lastIndexOf("/") + 1
   );
-  var t = what(`/${t1}`);
+  var urlDetails = getUrlDetails(`/${urlPath}`);
   try {
-    await User.addActivity(
-      t.activity,
+    await Activities.addActivity(
+      urlDetails.activity,
       uploadReq.userId,
-      ip.split(":")[3],
+      ip,
       useragent,
       filepath,
-      t.status
+      urlDetails.status
     );
     next();
   } catch (error) {
-    await User.addActivity(
-      t.activity,
+    await Activities.addActivity(
+      urlDetails.activity,
       uploadReq.userId ? uploadReq.userId : 0,
-      ip.split(":")[3],
+      ip,
       useragent,
       filepath,
       `Error: ${error}`
@@ -43,7 +42,7 @@ export const activityLoggerMiddleware = async (
   }
 };
 
-function what(url: String) {
+function getUrlDetails(url: String) {
   var obj;
   switch (url) {
     case "/permission/add":
@@ -58,11 +57,17 @@ function what(url: String) {
         status: "SUCCESSFUL",
       };
       break;
-
-    default:
+    case `/permission/update`:
       obj = {
         activity: "UPDATE_PERMISSION",
         status: "SUCCESSFUL",
+      };
+      break;
+
+    default:
+      obj = {
+        activity: "Url donot Found",
+        status: "FAILURE",
       };
   }
   return obj;
