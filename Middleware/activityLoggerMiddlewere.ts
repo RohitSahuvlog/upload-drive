@@ -8,6 +8,7 @@ export const activityLoggerMiddleware = async (
   next: NextFunction
 ) => {
   const uploadReq = req as UploadRequest;
+  const { email,user_email } = uploadReq.body;
   let ip: any =
     (uploadReq.headers["x-forwarded-for"] as string)?.split(",")[1] ||
     uploadReq.connection.remoteAddress;
@@ -21,11 +22,12 @@ export const activityLoggerMiddleware = async (
   try {
     await Activities.addActivity(
       urlDetails.activity,
-      uploadReq.userId,
+      uploadReq.userId ? uploadReq.userId : 0,
       ip,
       useragent,
       filepath,
-      urlDetails.status
+      urlDetails.status,
+      email || user_email
     );
     next();
   } catch (error) {
@@ -35,7 +37,8 @@ export const activityLoggerMiddleware = async (
       ip,
       useragent,
       filepath,
-      `Error: ${error}`
+      `Error: ${error}`,
+      email || user_email
     );
 
     return next(error);
@@ -57,13 +60,60 @@ function getUrlDetails(url: String) {
         status: "SUCCESSFUL",
       };
       break;
+    case `/user/login`:
+      obj = {
+        activity: "LOGIN",
+        status: "SUCCESSFUL",
+      };
+      break;
+    case `/user/register`:
+      obj = {
+        activity: "REGISTER",
+        status: "SUCCESSFUL",
+      };
+      break;
     case `/permission/update`:
       obj = {
         activity: "UPDATE_PERMISSION",
         status: "SUCCESSFUL",
       };
       break;
-
+    case `/user/myfiles`:
+      obj = {
+        activity: "GET_MYDETAILS",
+        status: "SUCCESSFUL",
+      };
+      break;
+    case `/file/upload`:
+      obj = {
+        activity: "UPLOAD_FILE",
+        status: "SUCCESSFUL",
+      };
+      break;
+    case `/file/delete`:
+      obj = {
+        activity: "DELETE_FILE",
+        status: "SUCCESSFUL",
+      };
+      break;
+    case `/file/update`:
+      obj = {
+        activity: "UPDATE_FILE",
+        status: "SUCCESSFUL",
+      };
+      break;
+    case `/file/transferowner`:
+      obj = {
+        activity: "TRANSFER_OWNERSHIP",
+        status: "SUCCESSFUL",
+      };
+      break;
+    case `/file/details`:
+      obj = {
+        activity: "DETAILS",
+        status: "SUCCESSFUL",
+      };
+      break;
     default:
       obj = {
         activity: "Url donot Found",

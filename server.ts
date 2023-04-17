@@ -13,11 +13,11 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.raw({ type: "application/vnd.custom-type" }));
-
+app.use(activityLoggerMiddleware);
 app.use("/user", userRoutes);
 app.use(authentication);
 app.use("/file", fileRouter);
-app.use("/permission",activityLoggerMiddleware, permissionRouter);
+app.use("/permission", permissionRouter);
 app.use(
   "/uploads",
   withReadPermission,
