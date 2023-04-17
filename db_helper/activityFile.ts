@@ -8,9 +8,10 @@ export class Activities {
     ipaddress: String,
     useragent: String,
     filename: String,
-    status: String
+    status: String,
+    other_user:String
   ) {
-    let sql = `INSERT INTO Activity   (action,user, ipaddress,user_agent,filename,status) VALUES ("${action}",${user_id}, "${ipaddress}","${useragent}","${filename}","${status}") `;
+    let sql = `INSERT INTO Activity   (action,user, ipaddress,user_agent,filename,status,other_user) VALUES ("${action}",${user_id}, "${ipaddress}","${useragent}","${filename}","${status}","${other_user}") `;
     var result = await sequelize.query(sql, { type: QueryTypes.INSERT });
     return result;
   }
