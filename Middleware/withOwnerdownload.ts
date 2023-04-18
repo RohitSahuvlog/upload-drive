@@ -12,11 +12,14 @@ const withOwnerdownload = async (
   next: NextFunction
 ) => {
   const ReqAuth = req as MyUserRequest;
-  console.log(ReqAuth.userId, ReqAuth.params.id);
+  var filepath = req.originalUrl.substring(
+    req.originalUrl.lastIndexOf("/") + 1
+  );
+  console.log(ReqAuth.userId, filepath);
   try {
-    const hasPermission = await Permission.hasOwnerFileReadAccess(
+    const hasPermission = await Permission.hasUserFileReadAccess(
       ReqAuth.userId,
-      ReqAuth.params.id
+      filepath
     );
     if (hasPermission) {
       return next();
