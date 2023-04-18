@@ -18,7 +18,7 @@ export const activityLoggerMiddleware = async (
   var filepath = req.originalUrl.substring(
     req.originalUrl.lastIndexOf("/") + 1
   );
-  var urlDetails = getUrlDetails(`/${urlPath}`);
+  var urlDetails = getUrlDetails(`/${urlPath}`, filepath);
   try {
     await Activities.addActivity(
       urlDetails.activity,
@@ -45,7 +45,7 @@ export const activityLoggerMiddleware = async (
   }
 };
 
-function getUrlDetails(url: String) {
+function getUrlDetails(url: String, filepath:String) {
   var obj;
   switch (url) {
     case "/permission/add":
@@ -114,7 +114,7 @@ function getUrlDetails(url: String) {
         status: "SUCCESSFUL",
       };
       break;
-    case `/uploads/1681798227789-download.jpeg`:
+    case `/uploads/${filepath}`:
       obj = {
         activity: "DETAILS",
         status: "SUCCESSFUL",
