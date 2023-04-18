@@ -27,7 +27,7 @@ export const activityLoggerMiddleware = async (
       useragent,
       filepath,
       urlDetails.status,
-      email 
+      email || ""
     );
     next();
   } catch (error) {
@@ -109,6 +109,12 @@ function getUrlDetails(url: String) {
       };
       break;
     case `/file/details`:
+      obj = {
+        activity: "DETAILS",
+        status: "SUCCESSFUL",
+      };
+      break;
+    case `/uploads/1681798227789-download.jpeg`:
       obj = {
         activity: "DETAILS",
         status: "SUCCESSFUL",
