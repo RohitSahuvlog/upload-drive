@@ -78,6 +78,18 @@ export class Permission {
     const result = await sequelize.query(sql, { type: QueryTypes.DELETE });
     return result;
   }
-
-
+  
+  static async hasOwnerFileReadAccess(userId: number, Id: String) {
+    var result = await sequelize.query(
+      `SELECT * from permissions where user_id=${userId}  `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    if (result.length !== 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
