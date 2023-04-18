@@ -20,8 +20,8 @@ fileRouter.post("/upload", upload.array("file", 5), uploadFile);
 fileRouter.post("/delete", withWritePermission, deleteFile);
 fileRouter.post(
   "/update",
-  withWritePermission,
   upload.array("file", 5),
+  withWritePermission,
   updateUploadFile
 );
 fileRouter.post("/transferowner", withOwnerPermission, updateOwnership);
