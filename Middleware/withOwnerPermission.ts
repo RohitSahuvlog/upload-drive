@@ -12,10 +12,11 @@ const withOwnerPermission = async (
   next: NextFunction
 ) => {
   var ReqAuth = req as MyUserRequest;
+  const { filepath } = ReqAuth.body;
   try {
     var hasPermission = await Permission.hasOwnerFileAccess(
       ReqAuth.userId,
-      ReqAuth.params.id
+      filepath
     );
     if (hasPermission) {
       return next();

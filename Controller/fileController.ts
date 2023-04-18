@@ -31,7 +31,7 @@ export const uploadFile = async (req: Request, res: Response) => {
 
 export const deleteFile = async (req: Request, res: Response) => {
   let uploadReq = req as UploadRequest;
-  let filepath = uploadReq.params.id;
+  const { filepath } = uploadReq.body;
   let routeFile = `./uploads/${filepath}`;
 
   try {
@@ -48,8 +48,9 @@ export const deleteFile = async (req: Request, res: Response) => {
 export const updateUploadFile = async (req: Request, res: Response) => {
   let uploadRequest = req as UploadRequest;
   const uploadFilename = `./uploads/${uploadRequest.files[0]["filename"]}`;
-  const replaceFilename = `./uploads/${req.params.id}`;
-  const filepath = uploadRequest.params.id;
+  const { filepath } = uploadRequest.body;
+  const replaceFilename = `./uploads/${filepath}`;
+
   const date = Date.now();
 
   try {
@@ -66,7 +67,7 @@ export const updateUploadFile = async (req: Request, res: Response) => {
 
 export const getFileDetails = async (req: Request, res: Response) => {
   let uploadReq = req as UploadRequest;
-  let filepath = uploadReq.params.id;
+  const { filepath } = uploadReq.body;
 
   try {
     const result: Array<any> = await File.getFileDetails(filepath);
@@ -80,9 +81,8 @@ export const getFileDetails = async (req: Request, res: Response) => {
 
 export const updateOwnership = async (req: Request, res: Response) => {
   let uploadRequest = req as UploadRequest;
-  const filepath = uploadRequest.params.id;
   const date = Date.now();
-  const { email } = uploadRequest.body;
+  const { email, filepath } = uploadRequest.body;
   try {
     const userDetails: any = await User.getUserByEmail(email);
     if (!userDetails || !userDetails.length) {
@@ -97,7 +97,7 @@ export const updateOwnership = async (req: Request, res: Response) => {
       return res.status(400).send({ message: "size limit exceed" });
     }
 
-    let updateFile:any = await File.updateOwner(userid, filepath, date);
+    let updateFile: any = await File.updateOwner(userid, filepath, date);
     if (updateFile[1] === 0) {
       return res
         .status(400)

@@ -12,10 +12,12 @@ const withReadPermission = async (
   next: NextFunction
 ) => {
   const ReqAuth = req as MyUserRequest;
+  const { filepath } = ReqAuth.body;
+  console.log(ReqAuth.userId, filepath);
   try {
     const hasPermission = await Permission.hasUserFileReadAccess(
       ReqAuth.userId,
-      req.params.id
+      filepath
     );
     if (hasPermission) {
       return next();

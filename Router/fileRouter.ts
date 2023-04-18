@@ -15,14 +15,14 @@ import withWritePermission from "../Middleware/withWritePermission";
 
 const fileRouter = Router();
 const upload = multer({ storage: storage, limits: { fileSize: 1048576 } });
-fileRouter.get("/details/:id", withReadPermission, getFileDetails);
+fileRouter.post("/details", withReadPermission, getFileDetails);
 fileRouter.post("/upload", upload.array("file", 5), uploadFile);
-fileRouter.post("/delete/:id", withWritePermission, deleteFile);
+fileRouter.post("/delete", withWritePermission, deleteFile);
 fileRouter.post(
-  "/update/:id",
+  "/update",
   withWritePermission,
   upload.array("file", 5),
   updateUploadFile
 );
-fileRouter.post("/transferowner/:id", withOwnerPermission, updateOwnership);
+fileRouter.post("/transferowner", withOwnerPermission, updateOwnership);
 export default fileRouter;

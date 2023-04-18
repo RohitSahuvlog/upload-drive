@@ -7,8 +7,8 @@ import {
 import withWritePermission from "../Middleware/withWritePermission";
 
 const permissionRouter = Router();
-permissionRouter.post("/add/:id", withWritePermission, addPermisions);
-permissionRouter.post("/remove/:id", withWritePermission, removePermissions);
-permissionRouter.post("/update/:id", withWritePermission, updatePermission);
+permissionRouter.post("/add", withWritePermission, addPermisions);
+permissionRouter.post("/remove", withWritePermission, removePermissions);
+permissionRouter.post("/update", withWritePermission, updatePermission);
 
 export default permissionRouter;

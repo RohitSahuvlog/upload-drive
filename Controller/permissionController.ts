@@ -6,7 +6,7 @@ import { User } from "../db_helper/user";
 export const addPermisions = async (req: Request, res: Response) => {
   const uploadReq = req as UploadRequest;
   const { permissionType, email } = req.body;
-  const filepath = uploadReq.params.id;
+  const { filepath } = uploadReq.body;
 
   try {
     if (!filepath || !permissionType || !email) {
@@ -38,7 +38,7 @@ export const addPermisions = async (req: Request, res: Response) => {
 export const updatePermission = async (req: Request, res: Response) => {
   let uploadReq = req as UploadRequest;
   const { permissionType, email } = req.body;
-  let filepath = uploadReq.params.id;
+  const { filepath } = uploadReq.body;
   let ip: any =
     (uploadReq.headers["x-forwarded-for"] as string)?.split(",")[1] ||
     uploadReq.connection.remoteAddress;
@@ -83,7 +83,7 @@ export const updatePermission = async (req: Request, res: Response) => {
 export const removePermissions = async (req: Request, res: Response) => {
   let uploadReq = req as UploadRequest;
   const { email } = uploadReq.body;
-  let filepath = uploadReq.params.id;
+  const { filepath } = uploadReq.body;
   let ip: any =
     (uploadReq.headers["x-forwarded-for"] as string)?.split(",")[1] ||
     uploadReq.connection.remoteAddress;
